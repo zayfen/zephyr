@@ -1,0 +1,22 @@
+{
+  "name": "uiengine",
+  "version": "1.0.0",
+  "description": "将自定义的AST转换成 HTML 和 WXML",
+  "main": "src/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zayfen/UIEngine.git"
+  },
+  "author": "zayfen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zayfen/UIEngine/issues"
+  },
+  "homepage": "https://github.com/zayfen/UIEngine#readme"
+}
