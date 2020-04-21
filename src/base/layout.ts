@@ -1,20 +1,14 @@
 // UI 布局组件
 
-import { Node } from './node';
+import { Node, TAGS } from './proptype';
 
 
 // 横向布局
 class Row implements Node {
+  tag = TAGS.ROW;
   id = '';
   level = 0;
   style = '';
-  classList = ['ui-layout-row'];
+  classList = ['ui-row'];
   attrList = {};
-}
-
-
-// 居中布局
-class Center extends Node {
-  style = ''
-  classList = ['ui-layout-center'];
 }
