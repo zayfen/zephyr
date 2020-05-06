@@ -8,7 +8,9 @@ interface Node {
   level: Number,
   style: string,
   classList: string[],
-  attrList: { [key: string]: any }
+  attrList: { [key: string]: any },
+  layoutNode: LayoutNode,
+  children: Array<Node>
 }
 
 
@@ -27,10 +29,10 @@ abstract class ThemeNode {
 
 abstract class Layout {
   private name: string; // render name
-  private nodeRenderList: Array<RenderNode>;
+  private nodeRenderList: Array<LayoutNode>;
 
-  public registerRenderNode (node: RenderNode) {
-    let foundIndex = this.duplicatedRenderNode(node);
+  public registerLayoutNode (node: LayoutNode) {
+    let foundIndex = this.duplicatedLayoutNode(node);
     if (foundIndex === -1) {
       this.nodeRenderList.push(node);
       return;
@@ -38,7 +40,17 @@ abstract class Layout {
     this.nodeRenderList.splice(foundIndex, 1, node);
   }
 
-  private duplicatedRenderNode (node: RenderNode): number {
+  public findRender (node: Node): LayoutNode {
+    for (let i = 0; i < this.nodeRenderList.length; i++) {
+      if (this.nodeRenderList[i].tag === node.tag) {
+        return this.nodeRenderList[i];
+      }
+    }
+
+    throw new Error('No Adapted LayoutNode: ' + node.tag);
+  }
+
+  private duplicatedLayoutNode (node: LayoutNode): number {
     let foundIndex = -1;
 
     for (let i = 0; i < this.nodeRenderList.length; i++) {
