@@ -1,6 +1,6 @@
 import { Node, TAGS, ThemeNode, LayoutNode } from './proptype';
 
-class Row implements Node {
+export class Row implements Node {
   tag = TAGS.ROW;
   id: string = 'row-id';
   level: Number = 0;
