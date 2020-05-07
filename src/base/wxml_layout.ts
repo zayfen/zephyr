@@ -4,7 +4,7 @@ import { Layout, LayoutNode, Node, TAGS, Utils } from './proptype';
 import { StringBuilder } from '../utils/string_builder';
 import { Image } from './node_factory';
 
-const kBasicLayout = new Layout();
+const kBasicWXMLLayout = new Layout();
 
 export class PageLayout extends LayoutNode {
   tag = TAGS.PAGE;
@@ -13,7 +13,7 @@ export class PageLayout extends LayoutNode {
     let sb = new StringBuilder();
     let style = node.style;
     let classString = Utils.resolveClassList(node);
-    sb.appendLine(`<div class="${classString}" style="${style}">`);
+    sb.appendLine(`<view class="${classString}" style="${style}">`);
 
     if (node.children && node.children.length > 0) {
       node.children.forEach(child => {
@@ -21,11 +21,11 @@ export class PageLayout extends LayoutNode {
       });
     }
 
-    sb.appendLine('</div>');
+    sb.appendLine('</view>');
     return sb.str();
   }
 }
-kBasicLayout.registerLayoutNode(new PageLayout);
+kBasicWXMLLayout.registerLayoutNode(new PageLayout);
 
 // 横向布局
 export class RowLayout extends LayoutNode {
@@ -34,7 +34,7 @@ export class RowLayout extends LayoutNode {
     let sb = new StringBuilder();
     let style = node.style;
     let classString = Utils.resolveClassList(node);
-    sb.appendLine(`<div class="${classString}" style="${style}">`);
+    sb.appendLine(`<view class="${classString}" style="${style}">`);
 
     if (node.children && node.children.length > 0) {
       node.children.forEach(child => {
@@ -42,11 +42,11 @@ export class RowLayout extends LayoutNode {
       });
     }
 
-    sb.appendLine('</div>');
+    sb.appendLine('</view>');
     return sb.str();
   }
 }
-kBasicLayout.registerLayoutNode(new RowLayout());
+kBasicWXMLLayout.registerLayoutNode(new RowLayout());
 
 // 列布局
 export class ColLayout extends LayoutNode {
@@ -56,7 +56,7 @@ export class ColLayout extends LayoutNode {
     let sb = new StringBuilder();
     let style = node.style;
     let classString = Utils.resolveClassList(node);
-    sb.appendLine(`<div class="${classString}" style="${style}">`);
+    sb.appendLine(`<view class="${classString}" style="${style}">`);
 
     if (node.children && node.children.length > 0) {
       node.children.forEach(child => {
@@ -64,12 +64,12 @@ export class ColLayout extends LayoutNode {
       });
     }
 
-    sb.appendLine(`</div>`);
+    sb.appendLine(`</view>`);
 
     return sb.str();
   }
 }
-kBasicLayout.registerLayoutNode(new ColLayout());
+kBasicWXMLLayout.registerLayoutNode(new ColLayout());
 
 // 卡片布局
 export class CardLayout extends LayoutNode {
@@ -79,17 +79,17 @@ export class CardLayout extends LayoutNode {
     let style = node.style;
     let classString = Utils.resolveClassList(node);
 
-    sb.appendLine(`<div class="${classString}" style="${style}">`)
+    sb.appendLine(`<view class="${classString}" style="${style}">`)
     if (node.children && node.children.length > 0) {
       node.children.forEach(child => {
         sb.appendLine(child.layoutNode.render(child));
       });
     }
-    sb.appendLine('</div>');
+    sb.appendLine('</view>');
     return sb.str();
   }
 }
-kBasicLayout.registerLayoutNode(new CardLayout());
+kBasicWXMLLayout.registerLayoutNode(new CardLayout());
 
 
 // 图像
@@ -100,15 +100,14 @@ export class ImageLayout extends LayoutNode {
     let sb = new StringBuilder();
     let style = node.style;
     let classString = Utils.resolveClassList(node);
-    sb.appendLine(`<div class="${classString}" style="${style}">`);
-    sb.appendLine(`  <img src="${node.attrList.src}">`);
-    sb.appendLine(`  </img>`);
-    sb.appendLine(`</div>`);
+    sb.appendLine(`<view class="${classString}" style="${style}">`);
+    sb.appendLine(`  <image src="${node.attrList.src}"/>`);
+    sb.appendLine(`</view>`);
 
     return sb.str();
   }
 }
-kBasicLayout.registerLayoutNode(new ImageLayout());
+kBasicWXMLLayout.registerLayoutNode(new ImageLayout());
 
 
 // 按钮
@@ -120,12 +119,12 @@ export class ButtonLayout extends LayoutNode {
     let style = node.style;
     let classString = Utils.resolveClassList(node);
 
-    sb.appendLine(`<a class="${classString}" style="${style}" href="javascript: void 0">`);
-    sb.appendLine(`  <span>${node.attrList.buttonText}</span>`);
-    sb.appendLine('</a>');
+    sb.appendLine(`<button class="${classString}" style="${style}">`);
+    sb.appendLine(`  <text>${node.attrList.buttonText}</text>`);
+    sb.appendLine('</button>');
     return sb.str();
   }
 }
-kBasicLayout.registerLayoutNode(new ButtonLayout);
+kBasicWXMLLayout.registerLayoutNode(new ButtonLayout);
 
-export const BasicLayout = kBasicLayout;
+export const BasicWXMLLayout = kBasicWXMLLayout;

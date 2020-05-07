@@ -13,8 +13,9 @@ interface Node {
   children: Array<Node>
   themeNode: ThemeNode,
   layoutNode: LayoutNode,
-}
 
+  appendTo: (node: Node) => Node;
+}
 
 abstract class LayoutNode {
   tag: TAGS = TAGS.NONE;
@@ -31,7 +32,7 @@ abstract class ThemeNode {
 
 class Layout {
   private name: string; // render name
-  private layoutNodeList: Array<LayoutNode>;
+  private layoutNodeList: Array<LayoutNode> = [];
 
   public registerLayoutNode (node: LayoutNode) {
     let foundIndex = this.duplicatedLayoutNode(node);
@@ -71,7 +72,7 @@ class Layout {
 
 class Theme {
   private name: string; // theme name
-  private themeNodeList: Array<ThemeNode>;
+  private themeNodeList: Array<ThemeNode> = [];
 
   public registerThemeNode (node: ThemeNode) {
     let foundIndex = this.duplicatedThemeNode(node);
@@ -115,6 +116,7 @@ class Theme {
 // 声明组件的tag,所有的组件的识别都要基于这个tag
 enum TAGS {
   NONE = 0,
+  PAGE,
   ROW,
   COL,
   CARD,
@@ -123,4 +125,25 @@ enum TAGS {
   TEXT
 }
 
-export { Node, LayoutNode, ThemeNode, Layout, Theme, TAGS };
+
+// some utils
+const Utils = {
+  resolveClassList (node: Node): string {
+    let finalClassList: string[] = [];
+    node.classList.forEach(cls => {
+      if (finalClassList.indexOf(cls.trim()) === -1) {
+        finalClassList.push(cls);
+      }
+    })
+
+    node.customClassList.forEach(cls => {
+      if (finalClassList.indexOf(cls) === -1) {
+        finalClassList.push(cls);
+      }
+    })
+
+    return finalClassList.join(' ');
+  }
+}
+
+export { Node, LayoutNode, ThemeNode, Layout, Theme, TAGS, Utils };
