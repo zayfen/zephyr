@@ -7,7 +7,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dist": "tsc",
+    "test": "node ./dist/index.js"
   },
   "repository": {
     "type": "git",
@@ -18,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/zayfen/UIEngine/issues"
   },
-  "homepage": "https://github.com/zayfen/UIEngine#readme"
+  "homepage": "https://github.com/zayfen/UIEngine#readme",
+  "devDependencies": {
+    "typescript": "^3.8.3"
+  }
 }

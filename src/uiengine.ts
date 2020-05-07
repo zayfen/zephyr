@@ -15,15 +15,25 @@ export class UIEngine {
     }
   }
 
-  useLayout(layout: Layout) {
+  useLayout(layout: Layout): UIEngine {
     this.layout = layout;
+    return this;
   }
 
-  useTheme(theme: Theme) {
+  useTheme(theme: Theme): UIEngine {
     this.theme = theme;
+    return this;
   }
 
   render() {
+    if (this.layout === null || this.theme === null) {
+      throw new Error('Please Set layout or theme');
+    }
+
+    if (this.root === null) {
+      return '';
+    }
+
     // step 1: inject theme and layout to Node
     let queue: Array<Node> = [];
     queue.push(this.root);
