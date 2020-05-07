@@ -1,4 +1,4 @@
-import { Node, Layout, Theme } from './base/proptype';
+import { Node, Layout, Theme, ThemeNode } from './base/proptype';
 
 export class UIEngine {
   private root: Node = null;
@@ -25,6 +25,19 @@ export class UIEngine {
 
   render() {
     // step 1: inject theme and layout to Node
-    return this.layout.findRender(this.root).render(this.theme);
+    let queue: Array<Node> = [];
+    queue.push(this.root);
+    while (queue.length > 0) {
+      let currentNode = queue.shift();
+      if (currentNode.children && currentNode.children.length > 0) {
+        currentNode.children.forEach(node => queue.push(node));
+      }
+      this.theme.injectThemeNode(currentNode);
+      this.layout.injectLayoutNode(currentNode);
+    }
+
+    // step2: render root
+    let dom = this.root.layoutNode.render(this.root);
+    return dom;
   }
 }

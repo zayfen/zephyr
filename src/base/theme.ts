@@ -1,9 +1,10 @@
 // theme about
 
-import { Theme, Node, TAGS } from './proptype';
+import { Theme, ThemeNode, Node, TAGS } from './proptype';
 
+const kBasicTheme = new Theme();
 
-export class RowTheme extends Theme {
+export class RowTheme extends ThemeNode {
   tag = TAGS.ROW;
 
   public inject (node: Node): Node {
@@ -12,3 +13,11 @@ export class RowTheme extends Theme {
     return node;
   }
 }
+
+kBasicTheme.registerThemeNode(new RowTheme());
+
+
+
+const BasicTheme = kBasicTheme;
+
+export { BasicTheme };

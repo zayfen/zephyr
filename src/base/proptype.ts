@@ -7,10 +7,12 @@ interface Node {
   id: string,
   level: Number,
   style: string,
+  customClassList: string[],
   classList: string[],
   attrList: { [key: string]: any },
-  layoutNode: LayoutNode,
   children: Array<Node>
+  themeNode: ThemeNode,
+  layoutNode: LayoutNode,
 }
 
 
@@ -27,23 +29,24 @@ abstract class ThemeNode {
 }
 
 
-abstract class Layout {
+class Layout {
   private name: string; // render name
-  private nodeRenderList: Array<LayoutNode>;
+  private layoutNodeList: Array<LayoutNode>;
 
   public registerLayoutNode (node: LayoutNode) {
     let foundIndex = this.duplicatedLayoutNode(node);
     if (foundIndex === -1) {
-      this.nodeRenderList.push(node);
+      this.layoutNodeList.push(node);
       return;
     }
-    this.nodeRenderList.splice(foundIndex, 1, node);
+    this.layoutNodeList.splice(foundIndex, 1, node);
   }
 
-  public findRender (node: Node): LayoutNode {
-    for (let i = 0; i < this.nodeRenderList.length; i++) {
-      if (this.nodeRenderList[i].tag === node.tag) {
-        return this.nodeRenderList[i];
+  public injectLayoutNode (node: Node) {
+    for (let i = 0; i < this.layoutNodeList.length; i++) {
+      if (this.layoutNodeList[i].tag === node.tag) {
+        node.layoutNode = this.layoutNodeList[i];
+        return;
       }
     }
 
@@ -53,8 +56,8 @@ abstract class Layout {
   private duplicatedLayoutNode (node: LayoutNode): number {
     let foundIndex = -1;
 
-    for (let i = 0; i < this.nodeRenderList.length; i++) {
-      let _node = this.nodeRenderList[i];
+    for (let i = 0; i < this.layoutNodeList.length; i++) {
+      let _node = this.layoutNodeList[i];
       if (_node.tag === node.tag) {
         foundIndex = i;
         break;
@@ -66,7 +69,7 @@ abstract class Layout {
 
 }
 
-abstract class Theme {
+class Theme {
   private name: string; // theme name
   private themeNodeList: Array<ThemeNode>;
 
@@ -92,6 +95,20 @@ abstract class Theme {
 
     return foundIndex;
   }
+
+  public injectThemeNode (node: Node) {
+    for (let i = 0; i < this.themeNodeList.length; i++) {
+      if (this.themeNodeList[i].tag === node.tag) {
+        node.themeNode = this.themeNodeList[i];
+        node.classList.splice(0, node.classList.length);
+        node.themeNode.inject(node);
+        return;
+      }
+    }
+
+    throw new Error('No Adapted ThemeNode: ' + node.tag);
+  }
+
 }
 
 
