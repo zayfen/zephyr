@@ -11,5 +11,4 @@ class Row implements Node {
   children: Node[] = [];
   themeNode: ThemeNode = null;
   layoutNode: LayoutNode = null;
-
 }
