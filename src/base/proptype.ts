@@ -10,11 +10,12 @@ interface Node {
   customClassList: string[],
   classList: string[],
   attrList: { [key: string]: any },
+  attrWhiteList?: string[], // 属性白名单
   children: Array<Node>
   themeNode: ThemeNode,
   layoutNode: LayoutNode,
-
-  appendTo: (node: Node) => Node;
+  append: (child: Node) => Node,
+  appendTo: (parent: Node) => Node
 }
 
 abstract class LayoutNode {
@@ -143,6 +144,10 @@ const Utils = {
     })
 
     return finalClassList.join(' ');
+  },
+
+  resolveAttributes (node: Node): string {
+
   }
 }
 

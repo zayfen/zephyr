@@ -12,10 +12,24 @@ class DefaultNode implements Node {
   themeNode: ThemeNode = null;
   layoutNode: LayoutNode = null;
 
+  append (child: Node): Node {
+    this.children.push(child);
+    return this;
+  }
+
   appendTo (node: Node): Node {
     node.children.push(this);
     return this;
   }
+
+  setAttribute (key: string, value: any) {
+    this.attrList[key] = value;
+  }
+
+  addCustomClass (cls: string) {
+    this.customClassList.push(cls);
+  }
+
 }
 
 export class Page extends DefaultNode {

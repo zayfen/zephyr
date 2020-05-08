@@ -120,9 +120,9 @@ export class ButtonLayout extends LayoutNode {
     let style = node.style;
     let classString = Utils.resolveClassList(node);
 
-    sb.appendLine(`<a class="${classString}" style="${style}" href="javascript: void 0">`);
+    sb.appendLine(`<button class="${classString}" style="${style}">`);
     sb.appendLine(`  <span>${node.attrList.buttonText}</span>`);
-    sb.appendLine('</a>');
+    sb.appendLine('</button>');
     return sb.str();
   }
 }
