@@ -45,8 +45,6 @@ console.log('\n\nWXML \n', engine.render());
 // 如果要实现自己的布局，请继承BasicLayout，并自己实现每个LayoutNode中的render方法
 // 如果想要实现自己的主题，请继承BasicTheme, 并自己实现每个ThemeNode中的inject方法
 
-```
-
 **OUTPUT**
 ```html
 <div class="ui-page" style="" >
@@ -73,7 +71,7 @@ ercontent.com%2Fu%2F1920250%3Fs%3D60%26v%3D4">
 </div>
 ```
 
-```wxml
+```xml
 
 <view class="ui-page" style="" >
 	<view class="ui-card" style="" >
