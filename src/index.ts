@@ -8,15 +8,22 @@ import { BasicWXMLLayout } from './base/wxml_layout';
 const root = new Page();
 const card = new Card().appendTo(root);
 const row = new Row().appendTo(card);
-const col1 = new Col().appendTo(row);
+const col1 = new Col().appendTo(row) as Col;
+col1.setSpan(8);
+
 const image = new Image().appendTo(col1) as Image;
 image.setSrc('https://avatars1.githubusercontent.com/u/1920250?s=60&v=4');
 
-const col2 = new Col().appendTo(row);
+const col2 = new Col().appendTo(row) as Col;
+col2.setSpan(8);
+col2.setGutter(10);
+
 const button: Button = new Button().appendTo(col2) as Button;
 button.setButtonText('我是一个按钮');
 
-const col3 = new Col().appendTo(row);
+const col3 = new Col().appendTo(row) as Col;
+col3.setSpan(8);
+
 const image2 = new Image().appendTo(col3) as Image;
 image2.setSrc('https://avatars1.githubusercontent.com/u/1920250?s=60&v=4');
 
