@@ -1,22 +1,70 @@
 // 节点接口
 
+import { camelCase2kebabCase } from "../utils/string_utils";
+
 
 
 interface Node {
   tag: TAGS | string,
   id: string,
   level: Number,
-  style: string,
+  style: { [key: string]: number | string },
   customClassList: string[],
   classList: string[],
-  attrList: { [key: string]: any },
+  attrList: { [key: string]: string | number },
   attrWhiteList?: string[], // 属性白名单
   children: Array<Node>
   themeNode: ThemeNode,
   layoutNode: LayoutNode,
   append: (child: Node) => Node,
-  appendTo: (parent: Node) => Node
+  appendTo: (parent: Node) => Node,
+  addAttr: (key: string, value: any) => Node,
+  addStyle: (key: string, value: string|number) => Node,
+  addCustomClass: (cls: string) => Node
 }
+
+
+abstract class DefaultNode implements Node {
+  attrWhiteList?: string[];
+  tag = TAGS.NONE;
+  id: string = '';
+  level: Number = 0;
+  style: { [key: string]: string | number } = {};
+  customClassList: string[] = [];
+  classList: string[] = [];
+  attrList: { [key: string]: any; } = {};
+  children: Node[] = [];
+  themeNode: ThemeNode = null;
+  layoutNode: LayoutNode = null;
+
+  append (child: Node): Node {
+    this.children.push(child);
+    return this;
+  }
+
+  appendTo (node: Node): Node {
+    node.children.push(this);
+    return this;
+  }
+
+  addCustomClass (cls: string): Node {
+    if (this.customClassList.indexOf(cls.trim()) === -1) {
+      this.customClassList.push(cls);
+    }
+    return this;
+  }
+
+  addAttr (key: string, value: any): Node {
+    this.attrList[key] = value;
+    return this;
+  }
+
+  addStyle (key: string, value: string | number): Node {
+    Utils.setStyle(this, key, value);
+    return this;
+  }
+}
+
 
 abstract class LayoutNode {
   tag: TAGS = TAGS.NONE;
@@ -147,8 +195,35 @@ const Utils = {
   },
 
   resolveAttributes (node: Node): string {
+    let validAttrList: string[] = node.attrWhiteList ? node.attrWhiteList : Object.keys(node.attrList);
+    if (!validAttrList || !Array.isArray(validAttrList)) {
+      return '';
+    }
 
+    let attributes = validAttrList.reduce((prev: string, curr: string) => {
+      if (node.attrList.hasOwnProperty(curr)) {
+        let val: string|number = node.attrList[curr];
+        if (typeof val === 'string') {
+          val = '\"' + encodeURIComponent(val) + '\"';
+        }
+        return `${prev} ${curr}=${val}`;
+      }
+      return prev;
+    }, '');
+
+    return attributes;
+  },
+
+  resolveStyle (node: Node): string {
+    let keys = Object.keys(node.style);
+    return keys.reduce((prev, curr) => {
+      return prev + camelCase2kebabCase(curr) + ':' + node.style[curr] + ';';
+    }, '');
+  },
+
+  setStyle (node: Node, styleKey: string, styleValue: string|number) {
+    node.style[styleKey] = styleValue;
   }
 }
 
-export { Node, LayoutNode, ThemeNode, Layout, Theme, TAGS, Utils };
+export { Node, DefaultNode, LayoutNode, ThemeNode, Layout, Theme, TAGS, Utils };

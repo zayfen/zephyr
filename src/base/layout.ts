@@ -1,8 +1,8 @@
 // UI 布局组件
 
 import { Layout, LayoutNode, Node, TAGS, Utils } from './proptype';
-import { StringBuilder } from '../utils/string_builder';
-import { Image } from './node_factory';
+import { StringBuilder } from '../utils/string_utils';
+import { Image, Button } from './node_factory';
 
 const kBasicLayout = new Layout();
 
@@ -11,9 +11,9 @@ export class PageLayout extends LayoutNode {
 
   public render (node: Node): string {
     let sb = new StringBuilder();
-    let style = node.style;
+    let style = Utils.resolveStyle(node);
     let classString = Utils.resolveClassList(node);
-    sb.appendLine(`<div class="${classString}" style="${style}">`);
+    sb.appendLine(`<div class="${classString}" style="${style}" ${Utils.resolveAttributes(node)}>`);
 
     if (node.children && node.children.length > 0) {
       node.children.forEach(child => {
@@ -32,9 +32,9 @@ export class RowLayout extends LayoutNode {
   tag = TAGS.ROW;
   public render (node: Node): string {
     let sb = new StringBuilder();
-    let style = node.style;
+    let style = Utils.resolveStyle(node);
     let classString = Utils.resolveClassList(node);
-    sb.appendLine(`<div class="${classString}" style="${style}">`);
+    sb.appendLine(`<div class="${classString}" style="${style}" ${Utils.resolveAttributes(node)}>`);
 
     if (node.children && node.children.length > 0) {
       node.children.forEach(child => {
@@ -54,9 +54,8 @@ export class ColLayout extends LayoutNode {
 
   public render (node: Node): string {
     let sb = new StringBuilder();
-    let style = node.style;
     let classString = Utils.resolveClassList(node);
-    sb.appendLine(`<div class="${classString}" style="${style}">`);
+    sb.appendLine(`<div class="${classString}" style="${Utils.resolveClassList(node)}" ${Utils.resolveAttributes(node)}>`);
 
     if (node.children && node.children.length > 0) {
       node.children.forEach(child => {
@@ -76,10 +75,10 @@ export class CardLayout extends LayoutNode {
   tag = TAGS.CARD;
   public render (node: Node): string {
     let sb = new StringBuilder();
-    let style = node.style;
+    let style = Utils.resolveStyle(node);
     let classString = Utils.resolveClassList(node);
 
-    sb.appendLine(`<div class="${classString}" style="${style}">`)
+    sb.appendLine(`<div class="${classString}" style="${style}" ${Utils.resolveAttributes(node)}>`)
     if (node.children && node.children.length > 0) {
       node.children.forEach(child => {
         sb.appendLine(child.layoutNode.render(child));
@@ -98,9 +97,9 @@ export class ImageLayout extends LayoutNode {
 
   public render (node: Node): string {
     let sb = new StringBuilder();
-    let style = node.style;
+    let style = Utils.resolveStyle(node);
     let classString = Utils.resolveClassList(node);
-    sb.appendLine(`<div class="${classString}" style="${style}">`);
+    sb.appendLine(`<div class="${classString}" style="${style}" ${Utils.resolveAttributes(node)}>`);
     sb.appendLine(`  <img src="${node.attrList.src}">`);
     sb.appendLine(`  </img>`);
     sb.appendLine(`</div>`);
@@ -117,10 +116,12 @@ export class ButtonLayout extends LayoutNode {
 
   public render (node: Node): string {
     let sb = new StringBuilder();
-    let style = node.style;
+    let style = Utils.resolveStyle(node);
     let classString = Utils.resolveClassList(node);
 
-    sb.appendLine(`<button class="${classString}" style="${style}">`);
+    let button = node as Button;
+    let buttonText = button.getButtonText();
+    sb.appendLine(`<button class="${classString}" style="${style}"  ${Utils.resolveAttributes(node)}>`);
     sb.appendLine(`  <span>${node.attrList.buttonText}</span>`);
     sb.appendLine('</button>');
     return sb.str();

@@ -1,6 +1,7 @@
 // theme about
 
-import { Theme, ThemeNode, Node, TAGS } from './proptype';
+import { Theme, ThemeNode, Node, TAGS, Utils } from './proptype';
+import { Col } from './node_factory';
 
 const kBasicTheme = new Theme();
 
@@ -33,6 +34,11 @@ export class ColTheme extends ThemeNode {
 
   public inject (node: Node): Node {
     const kColThemeClassList = ['ui-col'];
+    let col: Col = node as Col;
+    kColThemeClassList.push('ui-col-' + col.getSpan());
+    let gutter = col.getGutter();
+    Utils.setStyle(node, 'paddingLeft', `${gutter/2}px`);
+    Utils.setStyle(node, 'paddingRight', `${gutter/2}px`);
     kColThemeClassList.forEach(cls => node.classList.push(cls));
     return node;
   }

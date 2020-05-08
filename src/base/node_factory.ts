@@ -1,36 +1,5 @@
-import { Node, TAGS, ThemeNode, LayoutNode } from './proptype';
+import { Node, TAGS, ThemeNode, LayoutNode, Utils, DefaultNode } from './proptype';
 
-class DefaultNode implements Node {
-  tag = TAGS.NONE;
-  id: string = '';
-  level: Number = 0;
-  style: string = '';
-  customClassList: string[] = [];
-  classList: string[] = [];
-  attrList: { [key: string]: any; } = {};
-  children: Node[] = [];
-  themeNode: ThemeNode = null;
-  layoutNode: LayoutNode = null;
-
-  append (child: Node): Node {
-    this.children.push(child);
-    return this;
-  }
-
-  appendTo (node: Node): Node {
-    node.children.push(this);
-    return this;
-  }
-
-  setAttribute (key: string, value: any) {
-    this.attrList[key] = value;
-  }
-
-  addCustomClass (cls: string) {
-    this.customClassList.push(cls);
-  }
-
-}
 
 export class Page extends DefaultNode {
   tag = TAGS.PAGE;
@@ -45,6 +14,22 @@ export class Row extends DefaultNode {
 export class Col extends DefaultNode {
   tag = TAGS.COL;
   id: string = 'col-id';
+
+  setSpan (span: number) {
+    this.attrList.span = span;
+  }
+
+  getSpan (): number {
+    return this.attrList.span || 24;
+  }
+
+  setGutter (gutter: number) {
+    this.attrList.gutter = gutter;
+  }
+
+  getGutter (): number {
+    return this.attrList.gutter || 0;
+  }
 }
 
 export class Card extends DefaultNode {

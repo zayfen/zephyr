@@ -27,3 +27,10 @@ export class StringBuilder {
     return this.strings.join('');
   }
 }
+
+
+export function camelCase2kebabCase (camelCase: string): string {
+  return camelCase.split('').reduce((prevValue, currValue) => {
+    return (currValue >= 'A' && currValue <= 'Z') ? prevValue + '-' + currValue.toLowerCase() : prevValue + currValue;
+  }, '');
+}
