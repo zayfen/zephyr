@@ -25,8 +25,6 @@
   },
   "homepage": "https://github.com/zayfen/UIEngine#readme",
   "devDependencies": {
-    "cpx": "^1.5.0",
-    "typescript": "^3.8.3",
-    "wxss-cli": "^1.0.4"
+    "typescript": "^3.8.3"
   }
 }
