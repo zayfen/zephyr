@@ -1,4 +1,4 @@
-import { Node, TAGS, ThemeNode, LayoutNode, Utils, DefaultNode } from './proptype';
+import { TAGS, DefaultNode } from './proptype';
 
 
 export class Page extends DefaultNode {
@@ -35,6 +35,14 @@ export class Col extends DefaultNode {
 export class Card extends DefaultNode {
   tag = TAGS.CARD;
   id: string = 'col-card';
+
+  setTitle (title: string) {
+    this.addAttr('title', title);
+  }
+
+  getTitle (): string {
+    return this.attrList.title || '';
+  }
 }
 
 export class Image extends DefaultNode {
@@ -56,5 +64,34 @@ export class Button extends DefaultNode {
 
   getButtonText (): string {
     return this.attrList.buttonText;
+  }
+}
+
+export class Text extends DefaultNode {
+  tag = TAGS.TEXT;
+  id: string = 'text-id';
+
+  setText (text: string) {
+    this.addAttr('text', text);
+  }
+
+  getText (): string {
+    return this.attr('text');
+  }
+
+  setFontSize (fontSize: number) {
+    this.addStyle('fontSize', fontSize + 'px');
+  }
+
+  setFontWeight (weight: number) {
+    this.addStyle('fontWeight', weight);
+  }
+
+  setFontColor (hexColor: string) {
+    this.addStyle('color', hexColor);
+  }
+
+  setLineHeight (lineHeight: number) {
+    this.addStyle('lineHeight', lineHeight);
   }
 }

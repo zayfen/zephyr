@@ -1,49 +1,63 @@
 // 节点接口
+import { setStyle } from "../utils/node-utils";
 
-import { camelCase2kebabCase } from "../utils/string_utils";
-
-
+type TAG_TYPE = TAGS | string
 
 interface Node {
-  tag: TAGS | string,
+  tag: TAG_TYPE,
   id: string,
-  level: Number,
+  level: number,
   style: { [key: string]: number | string },
   customClassList: string[],
   classList: string[],
   attrList: { [key: string]: string | number },
   attrWhiteList?: string[], // 属性白名单
   children: Array<Node>
-  themeNode: ThemeNode,
-  layoutNode: LayoutNode,
-  append: (child: Node) => Node,
-  appendTo: (parent: Node) => Node,
-  addAttr: (key: string, value: any) => Node,
-  addStyle: (key: string, value: string|number) => Node,
-  addCustomClass: (cls: string) => Node
+  themeNode: ThemeNode<Node>,
+  layoutNode: LayoutNode<Node>,
+  append(child: Node): Node,
+  appendTo(parent: Node): Node,
+  addAttr(key: string, value: any): Node,
+  addStyle(key: string, value: string|number): Node,
+  addCustomClass(cls: string): Node,
+  addClass(cls: string): Node,
+  attr(key: string): any,
+  addWhiteListAttr(key: string): void
 }
 
 
 abstract class DefaultNode implements Node {
   attrWhiteList?: string[];
-  tag = TAGS.NONE;
+  tag: TAG_TYPE = TAGS.NONE;
   id: string = '';
-  level: Number = 0;
+  level: number = 0;
   style: { [key: string]: string | number } = {};
   customClassList: string[] = [];
   classList: string[] = [];
   attrList: { [key: string]: any; } = {};
   children: Node[] = [];
-  themeNode: ThemeNode = null;
-  layoutNode: LayoutNode = null;
+  themeNode: ThemeNode<Node>;
+  layoutNode: LayoutNode<Node>;
+
+  constructor() {
+    this.attrWhiteList = [];
+    this.id = '';
+    this.level = 0;
+    this.style = {};
+    this.customClassList = [];
+    this.classList = [];
+    this.children = [];
+  }
 
   append (child: Node): Node {
     this.children.push(child);
+    child.level = this.level + 1;
     return this;
   }
 
   appendTo (node: Node): Node {
     node.children.push(this);
+    this.level = node.level + 1;
     return this;
   }
 
@@ -54,36 +68,51 @@ abstract class DefaultNode implements Node {
     return this;
   }
 
+  addClass (cls: string): Node {
+    if (this.classList.indexOf(cls.trim()) === -1) {
+      this.classList.push(cls);
+    }
+    return this;
+  }
+
   addAttr (key: string, value: any): Node {
     this.attrList[key] = value;
     return this;
   }
 
+  attr (key: string): any {
+    return this.attrList[key];
+  }
+
   addStyle (key: string, value: string | number): Node {
-    Utils.setStyle(this, key, value);
+    setStyle(this, key, value);
     return this;
+  }
+
+  addWhiteListAttr (key: string) {
+    this.attrWhiteList.push(key);
   }
 }
 
 
-abstract class LayoutNode {
-  tag: TAGS = TAGS.NONE;
-  tabWidth: Number;
-  abstract render(node: Node): string;
+abstract class LayoutNode<T extends Node> {
+  tag: TAG_TYPE = TAGS.NONE;
+  tabWidth: number = 2;
+  abstract render(node: T): string;
 }
 
 
-abstract class ThemeNode {
-  tag: TAGS = TAGS.NONE;
-  abstract inject(node: Node): Node;
+abstract class ThemeNode<T extends Node> {
+  tag: TAG_TYPE = TAGS.NONE;
+  abstract inject(node: T): T;
 }
 
 
 class Layout {
-  private name: string; // render name
-  private layoutNodeList: Array<LayoutNode> = [];
+  private name: string = ''; // render name
+  private layoutNodeList: Array<LayoutNode<Node>> = [];
 
-  public registerLayoutNode (node: LayoutNode) {
+  public registerLayoutNode <T extends Node> (node: LayoutNode<T>) {
     let foundIndex = this.duplicatedLayoutNode(node);
     if (foundIndex === -1) {
       this.layoutNodeList.push(node);
@@ -92,18 +121,18 @@ class Layout {
     this.layoutNodeList.splice(foundIndex, 1, node);
   }
 
-  public injectLayoutNode (node: Node) {
+  public injectLayoutNode <T extends Node> (node: T) {
     for (let i = 0; i < this.layoutNodeList.length; i++) {
       if (this.layoutNodeList[i].tag === node.tag) {
         node.layoutNode = this.layoutNodeList[i];
         return;
       }
     }
-
+    debugger
     throw new Error('No Adapted LayoutNode: ' + node.tag);
   }
 
-  private duplicatedLayoutNode (node: LayoutNode): number {
+  private duplicatedLayoutNode<T extends Node> (node: LayoutNode<T>): number {
     let foundIndex = -1;
 
     for (let i = 0; i < this.layoutNodeList.length; i++) {
@@ -120,10 +149,10 @@ class Layout {
 }
 
 class Theme {
-  private name: string; // theme name
-  private themeNodeList: Array<ThemeNode> = [];
+  private name: string = ''; // theme name
+  private themeNodeList: Array<ThemeNode<Node>> = [];
 
-  public registerThemeNode (node: ThemeNode) {
+  public registerThemeNode <T extends Node> (node: ThemeNode<T>) {
     let foundIndex = this.duplicatedThemeNode(node);
     if (foundIndex === -1) {
       this.themeNodeList.push(node);
@@ -133,7 +162,7 @@ class Theme {
   }
 
 
-  private duplicatedThemeNode (node: ThemeNode): number {
+  private duplicatedThemeNode <T extends Node> (node: ThemeNode<T>): number {
     let foundIndex = -1;
     for (let i = 0; i < this.themeNodeList.length; i++) {
       let _node = this.themeNodeList[i];
@@ -146,7 +175,7 @@ class Theme {
     return foundIndex;
   }
 
-  public injectThemeNode (node: Node) {
+  public injectThemeNode <T extends Node> (node: T) {
     for (let i = 0; i < this.themeNodeList.length; i++) {
       if (this.themeNodeList[i].tag === node.tag) {
         node.themeNode = this.themeNodeList[i];
@@ -174,56 +203,4 @@ enum TAGS {
   TEXT
 }
 
-
-// some utils
-const Utils = {
-  resolveClassList (node: Node): string {
-    let finalClassList: string[] = [];
-    node.classList.forEach(cls => {
-      if (finalClassList.indexOf(cls.trim()) === -1) {
-        finalClassList.push(cls);
-      }
-    })
-
-    node.customClassList.forEach(cls => {
-      if (finalClassList.indexOf(cls) === -1) {
-        finalClassList.push(cls);
-      }
-    })
-
-    return finalClassList.join(' ');
-  },
-
-  resolveAttributes (node: Node): string {
-    let validAttrList: string[] = node.attrWhiteList ? node.attrWhiteList : Object.keys(node.attrList);
-    if (!validAttrList || !Array.isArray(validAttrList)) {
-      return '';
-    }
-
-    let attributes = validAttrList.reduce((prev: string, curr: string) => {
-      if (node.attrList.hasOwnProperty(curr)) {
-        let val: string|number = node.attrList[curr];
-        if (typeof val === 'string') {
-          val = '\"' + encodeURIComponent(val) + '\"';
-        }
-        return `${prev} ${curr}=${val}`;
-      }
-      return prev;
-    }, '');
-
-    return attributes;
-  },
-
-  resolveStyle (node: Node): string {
-    let keys = Object.keys(node.style);
-    return keys.reduce((prev, curr) => {
-      return prev + camelCase2kebabCase(curr) + ':' + node.style[curr] + ';';
-    }, '');
-  },
-
-  setStyle (node: Node, styleKey: string, styleValue: string|number) {
-    node.style[styleKey] = styleValue;
-  }
-}
-
-export { Node, DefaultNode, LayoutNode, ThemeNode, Layout, Theme, TAGS, Utils };
+export { Node, DefaultNode, LayoutNode, ThemeNode, Layout, Theme, TAGS };

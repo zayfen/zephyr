@@ -1,12 +1,17 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "target": "ES5",
     "module": "commonjs",
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
     "outDir": "./dist",
-    "sourceMap": true
+    "sourceMap": true,
+    "declaration": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": [
     "src/**/*"

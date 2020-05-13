@@ -1,14 +1,18 @@
 {
   "name": "uiengine",
-  "version": "1.0.0",
+  "publishConfig": {},
+  "version": "0.1.0",
   "description": "将自定义的AST转换成 HTML 和 WXML",
-  "main": "src/index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "dist": "tsc",
-    "test": "node ./dist/index.js"
+    "dist": "tsc && cpx src/themes/*.less dist/style/",
+    "test": "node ./dist/index.js",
+    "publish": "npm publish",
+    "prepublish": "npm run dist"
   },
   "repository": {
     "type": "git",
@@ -21,6 +25,7 @@
   },
   "homepage": "https://github.com/zayfen/UIEngine#readme",
   "devDependencies": {
+    "cpx": "^1.5.0",
     "typescript": "^3.8.3"
   }
 }

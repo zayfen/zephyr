@@ -110,7 +110,15 @@ html, body, .ui-page {
   overflow: hidden;
   color: #303133;
   transition: .3s;
-  box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+  box-shadow: 2px 2px 12px 0 rgba(0,0,0,.1);
+
+  &__title {
+    text-align: left;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 40px;
+    padding-left: 20px;
+  }
 }
 
 /* ui-button */
@@ -149,4 +157,14 @@ html, body, .ui-page {
   position: relative;
   display: inline-block;
   overflow: hidden;
+}
+
+.ui-round-image-text {
+  padding-bottom: 10px;
+  img {
+    border-radius: 50%;
+  }
+  .ui-text {
+    font-size: 12px;
+  }
 }
