@@ -172,7 +172,7 @@ console.log(wxml);
 
 **OUTPUT**
 
-​```html
+```html
 <div class="ui-page" style="">
   <div class="ui-card" style="margin-top:20px;">
     <div class="ui-card__title"><span>我是卡片的标题</span></div>
@@ -197,7 +197,7 @@ console.log(wxml);
 </div>
 ```
 
-​```html
+```html
 <view class="ui-page" style="" >
   <view class="ui-card" style="margin-top:20px;" >
   <text class="ui-card__title">我是卡片的标题</text>
