@@ -11,7 +11,7 @@ UIEngine是一个可以将对象树转换成特定的视图的框架。比如可
 
 ## UIEngine的架构图（逻辑视图）
 
-![](D:\Github\UIEngine\UIEngine系统架构（逻辑视图）.svg)
+![](./UIEngine系统架构（逻辑视图）.svg)
 
 ## Tutorial
 
@@ -235,4 +235,4 @@ console.log(wxml);
 
 一张在浏览器中的效果图
 
-<img src="D:\Github\UIEngine\demo.png" alt="demo" style="zoom:25%;" />
+<img src="./demo.png" alt="demo" style="zoom:25%;" />
