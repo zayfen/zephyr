@@ -179,8 +179,7 @@ console.log(wxml);
     <div class="ui-row" style="">
       <div class="ui-col ui-col-6" style="ui-col ui-col-6">
         <div class="ui-image" style="">
-          <img src="https://avatars1.githubusercontent.com/u/1920250?s=60&v=4">
-          </img>
+          <img src="https://avatars1.githubusercontent.com/u/1920250?s=60&v=4"/>
         </div>
       </div>
       <div class="ui-col ui-col-6" style="ui-col ui-col-6">
@@ -190,8 +189,7 @@ console.log(wxml);
       </div>
       <div class="ui-col ui-col-6" style="ui-col ui-col-6">
         <div class="ui-image" style="" mode="aspectFill">
-          <img src="https://avatars1.githubusercontent.com/u/1920250?s=60&v=4">
-          </img>
+          <img src="https://avatars1.githubusercontent.com/u/1920250?s=60&v=4"/>
         </div>
       </div>
     </div>
