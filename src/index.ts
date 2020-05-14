@@ -1,11 +1,13 @@
 import { UIEngine } from "./uiengine";
 import { Node, DefaultNode, Layout, LayoutNode, Theme, ThemeNode } from './core/proptype';
 
-// import { Page, Row, Col, Card, Image, Button, Text } from './core/node-factory'
 import * as Components from './core/node-factory';
 import {BasicTheme} from './themes/base/base-theme'
 import {BasicHTMLLayout} from './layouts/html/html-layout'
 import {BasicWXMLLayout} from './layouts/wxml/wxml-layout'
+
+import * as NodeUtils from './utils/node-utils';
+import * as StringUtils from './utils/string-utils';
 
 // 原型接口
 export {
@@ -24,5 +26,11 @@ export {
   BasicTheme,
   BasicHTMLLayout,
   BasicWXMLLayout
+}
+
+// 到处Utils
+export {
+  NodeUtils,
+  StringUtils
 }
 

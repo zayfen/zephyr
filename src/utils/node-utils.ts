@@ -45,7 +45,7 @@ export  function resolveClassList (node: Node): string {
     }, '');
   }
 
+
   export function setStyle (node: Node, styleKey: string, styleValue: string|number) {
     node.style[styleKey] = styleValue;
   }
-

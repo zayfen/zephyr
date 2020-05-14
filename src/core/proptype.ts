@@ -11,14 +11,14 @@ interface Node {
   customClassList: string[],
   classList: string[],
   attrList: { [key: string]: string | number },
-  attrWhiteList?: string[], // 属性白名单
+  attrWhiteList?: string[], // 属性白名单, 自由在白名单中的属性才能render到视图节点上
   children: Array<Node>
   themeNode: ThemeNode<Node>,
   layoutNode: LayoutNode<Node>,
   append(child: Node): this,
   appendTo(parent: Node): this,
   addAttr(key: string, value: any): this,
-  addStyle(key: string, value: string|number): this,
+  addStyle(key: string, value: string | number): this,
   addCustomClass(cls: string): this,
   addClass(cls: string): this,
   attr(key: string): any,
@@ -84,7 +84,7 @@ abstract class DefaultNode implements Node {
     return this.attrList[key];
   }
 
-  addStyle (key: string, value: string | number): this{
+  addStyle (key: string, value: string | number): this {
     setStyle(this, key, value);
     return this;
   }
