@@ -9,7 +9,7 @@
     "test": "test"
   },
   "scripts": {
-    "dist": "tsc && cpx src/themes/*.less dist/style/",
+    "dist": "tsc && cpx src/themes/**/*.less dist/style/",
     "test": "node ./dist/index.js",
     "publish": "npm publish",
     "prepublish": "npm run dist"
