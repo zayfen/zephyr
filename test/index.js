@@ -31,6 +31,7 @@ col2.append(button);
 const col3 = new Col().appendTo(row);
 col3.setSpan(6);
 col3.setGutter(10);
+
 let img2 = new Image();
 img2.setSrc('https://avatars1.githubusercontent.com/u/1920250?s=60&v=4');
 img2.addWhiteListAttr('mode');

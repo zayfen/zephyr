@@ -15,14 +15,14 @@ interface Node {
   children: Array<Node>
   themeNode: ThemeNode<Node>,
   layoutNode: LayoutNode<Node>,
-  append(child: Node): Node,
-  appendTo(parent: Node): Node,
-  addAttr(key: string, value: any): Node,
-  addStyle(key: string, value: string|number): Node,
-  addCustomClass(cls: string): Node,
-  addClass(cls: string): Node,
+  append(child: Node): this,
+  appendTo(parent: Node): this,
+  addAttr(key: string, value: any): this,
+  addStyle(key: string, value: string|number): this,
+  addCustomClass(cls: string): this,
+  addClass(cls: string): this,
   attr(key: string): any,
-  addWhiteListAttr(key: string): void
+  addWhiteListAttr(key: string): this
 }
 
 
@@ -49,33 +49,33 @@ abstract class DefaultNode implements Node {
     this.children = [];
   }
 
-  append (child: Node): Node {
+  append (child: Node): this {
     this.children.push(child);
     child.level = this.level + 1;
     return this;
   }
 
-  appendTo (node: Node): Node {
+  appendTo (node: Node): this {
     node.children.push(this);
     this.level = node.level + 1;
     return this;
   }
 
-  addCustomClass (cls: string): Node {
+  addCustomClass (cls: string): this {
     if (this.customClassList.indexOf(cls.trim()) === -1) {
       this.customClassList.push(cls);
     }
     return this;
   }
 
-  addClass (cls: string): Node {
+  addClass (cls: string): this {
     if (this.classList.indexOf(cls.trim()) === -1) {
       this.classList.push(cls);
     }
     return this;
   }
 
-  addAttr (key: string, value: any): Node {
+  addAttr (key: string, value: any): this {
     this.attrList[key] = value;
     return this;
   }
@@ -84,13 +84,14 @@ abstract class DefaultNode implements Node {
     return this.attrList[key];
   }
 
-  addStyle (key: string, value: string | number): Node {
+  addStyle (key: string, value: string | number): this{
     setStyle(this, key, value);
     return this;
   }
 
-  addWhiteListAttr (key: string) {
+  addWhiteListAttr (key: string): this {
     this.attrWhiteList.push(key);
+    return this;
   }
 }
 
