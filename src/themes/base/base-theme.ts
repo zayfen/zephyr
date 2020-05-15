@@ -1,6 +1,6 @@
-import { Theme, ThemeNode } from "../../core/proptype";
+import { Theme, ThemeNode } from "../../core/prototype";
 import { Page, Row, Col, Card, Button, Image, Text } from "../../core/node-factory";
-import { TAGS } from "../../core/proptype";
+import { TAGS } from "../../core/prototype";
 import { setStyle } from "../../utils/node-utils";
 
 const kBasicTheme = new Theme();

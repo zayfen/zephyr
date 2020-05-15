@@ -1,8 +1,8 @@
 // UI 布局组件
 
-import { Layout, LayoutNode } from "../../core/proptype";
+import { Layout, LayoutNode } from "../../core/prototype";
 import { Page, Row, Col, Card, Button, Image, Text } from "../../core/node-factory";
-import { TAGS } from "../../core/proptype";
+import { TAGS } from "../../core/prototype";
 import { StringBuilder } from "../../utils/string-utils";
 import { resolveStyle, resolveClassList, resolveAttributes } from "../../utils/node-utils";
 

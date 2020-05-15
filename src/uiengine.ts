@@ -1,4 +1,4 @@
-import { Node, Layout, Theme } from './core/proptype';
+import { Node, Layout, Theme } from './core/prototype';
 
 export class UIEngine {
   private root: Node = null;
@@ -54,4 +54,6 @@ export class UIEngine {
     let dom = this.root.layoutNode.render(this.root);
     return dom;
   }
+
+
 }

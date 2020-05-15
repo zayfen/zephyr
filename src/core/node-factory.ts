@@ -1,4 +1,4 @@
-import { TAGS, DefaultNode } from './proptype';
+import { TAGS, DefaultNode } from './prototype';
 
 
 export class Page extends DefaultNode {

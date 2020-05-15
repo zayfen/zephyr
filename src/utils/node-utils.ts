@@ -1,4 +1,4 @@
-import { Node } from '../core/proptype';
+import { Node } from '../core/prototype';
 import { camelCase2kebabCase } from './string-utils';
 
 export  function resolveClassList (node: Node): string {

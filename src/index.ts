@@ -1,5 +1,5 @@
 import { UIEngine } from "./uiengine";
-import { Node, DefaultNode, Layout, LayoutNode, Theme, ThemeNode } from './core/proptype';
+import { Node, DefaultNode, Layout, LayoutNode, Theme, ThemeNode } from './core/prototype';
 
 import * as Components from './core/node-factory';
 import {BasicTheme} from './themes/base/base-theme'

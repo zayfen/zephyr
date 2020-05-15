@@ -95,6 +95,12 @@ abstract class DefaultNode implements Node {
   }
 }
 
+// 尺寸转换的接口
+export interface SizeTransform {
+  
+  transform (size: number): number;
+}
+
 
 abstract class LayoutNode<T extends Node> {
   tag: TAG_TYPE = TAGS.NONE;
@@ -112,6 +118,7 @@ abstract class ThemeNode<T extends Node> {
 class Layout {
   private name: string = ''; // render name
   private layoutNodeList: Array<LayoutNode<Node>> = [];
+  private sizeTransformer: SizeTransform;
 
   public registerLayoutNode <T extends Node> (node: LayoutNode<T>) {
     let foundIndex = this.duplicatedLayoutNode(node);
