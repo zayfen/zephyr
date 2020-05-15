@@ -1,51 +1,47 @@
-html, body, .ui-page {
+html,
+body,
+.ui-page {
   margin: 0;
   padding: 0;
   height: 100%;
-  font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,SimSun,sans-serif;
+  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, SimSun, sans-serif;
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
 }
-
 /* ui-row */
 .ui-row {
   position: relative;
   box-sizing: border-box;
 }
-
 .ui-row--flex {
   display: flex;
-
-  &::before {
-    display: none;
-  }
-  &::after {
-    display: none;
-  }
-  &__main-axis-center {
-    justify-content: center;
-  }
-  &__cross-axis-center {
-    align-items: center;
-  }
 }
-
-.ui-row::before, .ui-row::after {
+.ui-row--flex::before {
+  display: none;
+}
+.ui-row--flex::after {
+  display: none;
+}
+.ui-row--flex__main-axis-center {
+  justify-content: center;
+}
+.ui-row--flex__cross-axis-center {
+  align-items: center;
+}
+.ui-row::before,
+.ui-row::after {
   display: table;
   content: "";
 }
-
 .ui-row::after {
   clear: both;
 }
-
 /* ui-col */
 [class*=ui-col-] {
   float: left;
   box-sizing: border-box;
 }
-
 .ui-col-1 {
   width: calc(100%/24*1);
 }
@@ -118,7 +114,6 @@ html, body, .ui-page {
 .ui-col-24 {
   width: calc(100%/24*24);
 }
-
 /* ui-card */
 .ui-card {
   border-radius: 4px;
@@ -126,18 +121,16 @@ html, body, .ui-page {
   background-color: #fff;
   overflow: hidden;
   color: #303133;
-  transition: .3s;
-  box-shadow: 2px 2px 12px 0 rgba(0,0,0,.1);
-
-  &__title {
-    text-align: left;
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 40px;
-    padding-left: 20px;
-  }
+  transition: 0.3s;
+  box-shadow: 2px 2px 12px 0 rgba(0, 0, 0, 0.1);
 }
-
+.ui-card__title {
+  text-align: left;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 40px;
+  padding-left: 20px;
+}
 /* ui-button */
 .ui-button {
   display: inline-block;
@@ -152,7 +145,7 @@ html, body, .ui-page {
   box-sizing: border-box;
   outline: none;
   margin: 0;
-  transition: .1s;
+  transition: 0.1s;
   font-weight: 500;
   -moz-user-select: none;
   -webkit-user-select: none;
@@ -168,7 +161,6 @@ html, body, .ui-page {
   padding-left: 0;
   padding-right: 0;
 }
-
 /* ui-image */
 .ui-image {
   position: relative;
@@ -176,13 +168,12 @@ html, body, .ui-page {
   width: 100%;
   overflow: hidden;
 }
-
 .ui-round-image-text {
   padding-bottom: 10px;
-  img {
-    border-radius: 50%;
-  }
-  .ui-text {
-    font-size: 12px;
-  }
+}
+.ui-round-image-text img {
+  border-radius: 50%;
+}
+.ui-round-image-text .ui-text {
+  font-size: 12px;
 }

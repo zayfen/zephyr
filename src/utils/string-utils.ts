@@ -48,3 +48,110 @@ export function camelCase2kebabCase (camelCase: string): string {
     return (currValue >= 'A' && currValue <= 'Z') ? prevValue + '-' + currValue.toLowerCase() : prevValue + currValue;
   }, '');
 }
+
+
+/**
+ * 尝试将字符串转换成数字
+ * @param s {string}
+ */
+function tryConvertStringToNumber (s: string | number): number | string {
+  let number: number | string = s;
+  let r: number = parseFloat(s as string);
+  if (!isNaN(r)) {
+    number = r;
+  }
+  return number;
+}
+
+
+export function trim (s: string, chars: string): string {
+  // step1: trim spaces
+  s = s.trim();
+
+  // step2: trim specified chars
+  let leftBoundary: number = 0;
+  let rightBoundary: number = s.split('').length - 1;
+  let reachLeftBoundary: boolean = false;
+  let reachRightBoundary: boolean = false;
+
+  while (leftBoundary <= rightBoundary) {
+    reachLeftBoundary = reachLeftBoundary || chars.indexOf(s.charAt(leftBoundary)) === -1;
+    reachRightBoundary = reachRightBoundary || chars.indexOf(s.charAt(rightBoundary)) === -1;
+    if (reachLeftBoundary && reachRightBoundary) {
+      break;
+    }
+    !reachLeftBoundary && leftBoundary++;
+    !reachRightBoundary && rightBoundary--;
+  }
+
+  return s.slice(leftBoundary, rightBoundary + 1);
+}
+
+
+export function isspace (char: string): boolean {
+  let charCode = char.charCodeAt(0);
+  const WhiteSpaceCharCode = [9, 10, 11, 12, 13, 32, 133, 160];
+  return WhiteSpaceCharCode.indexOf(charCode) > -1;
+}
+
+type TPropertyAsArray = Array<string | number>;
+
+/**
+ * 将css属性转换成数组形式
+ * @param propValue { string }
+ */
+export function splitCssPropertyValue (propValue: string): TPropertyAsArray {
+  let result: TPropertyAsArray = [];
+  propValue = trim(propValue, ';  ');
+  let start: number = 0; // always point to valid char (not space char)
+  let forward: number = start;
+  while (forward < propValue.length) {
+    if (propValue.charAt(forward) === '(') {
+      // forward to paired ')'
+      let fforward = forward + 1;
+      let depth = 1;
+      while (fforward < propValue.length) {
+        if (propValue.charAt(fforward) === '(') {
+          depth++;
+        } else if (propValue.charAt(fforward) === ')') {
+          depth--;
+        }
+
+        if (depth === 0) {
+          // find paired ')'
+          forward = fforward;
+          break;
+        }
+        fforward++;
+      }
+
+      if (depth !== 0) {
+        throw new Error('[splitCssPropertyValue error] invalid propValue: ' + propValue);
+      }
+    }
+
+    if (isspace(propValue.charAt(forward)) || forward === propValue.length - 1) {
+      // found a section, pick section string, and step next section
+      if (forward === propValue.length - 1) {
+        forward++;
+      }
+
+      result.push(tryConvertStringToNumber(propValue.slice(start, forward)));
+      while (forward < propValue.length && isspace(propValue.charAt(forward))) {
+        forward++;
+      }
+      start = forward;
+      continue;
+    }
+
+    forward++;
+  }
+
+  return result;
+}
+
+
+// some tests
+
+console.log(splitCssPropertyValue('1px solid rgba(0, 0, 0, 1);'));
+console.log(splitCssPropertyValue('a11111111111px abc'));

@@ -23,6 +23,16 @@ export class RowTheme extends ThemeNode<Row> {
   public inject (node: Row): Row {
     const kRowThemeClassList = ['ui-row'];
     kRowThemeClassList.forEach(cls => node.classList.push(cls));
+    if (node.isRowTypeFlex()) {
+      node.classList.push('ui-row--flex');
+
+      if (node.isChildrenCenterOnMainAxis()) {
+        node.classList.push('ui-row--flex__main-axis-center');
+      }
+      if (node.isChildrenCenterOnCrossAxis()) {
+        node.classList.push('ui-row--flex__cross-axis-center');
+      }
+    }
     return node;
   }
 }

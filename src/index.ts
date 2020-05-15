@@ -1,6 +1,14 @@
 import { UIEngine } from "./uiengine";
-import { Node, DefaultNode, Layout, LayoutNode, Theme, ThemeNode } from './core/prototype';
-
+import {
+  Node,
+  DefaultNode,
+  Layout,
+  LayoutNode,
+  Theme,
+  ThemeNode,
+  SizeTranslator
+} from './core/prototype';
+// export * from './core/prototype';
 import * as Components from './core/node-factory';
 import {BasicTheme} from './themes/base/base-theme'
 import {BasicHTMLLayout} from './layouts/html/html-layout'
@@ -18,6 +26,7 @@ export {
   LayoutNode,
   Theme,
   ThemeNode,
+  SizeTranslator
 }
 
 // 基础组件的 主题 和 HTML & WXML的布局对象

@@ -21,7 +21,7 @@ interface Node {
   addStyle(key: string, value: string | number): this,
   addCustomClass(cls: string): this,
   addClass(cls: string): this,
-  attr(key: string): any,
+  attr(key: string, elseDefault?: any): any,
   addWhiteListAttr(key: string): this
 }
 
@@ -80,8 +80,8 @@ abstract class DefaultNode implements Node {
     return this;
   }
 
-  attr (key: string): any {
-    return this.attrList[key];
+  attr (key: string, elseDefault?: any): any {
+    return this.attrList[key] === void 0 ? this.attrList[key] : elseDefault;
   }
 
   addStyle (key: string, value: string | number): this {
@@ -96,15 +96,22 @@ abstract class DefaultNode implements Node {
 }
 
 // 尺寸转换的接口
-export interface SizeTransform {
-  
-  transform (size: number): number;
+abstract class  SizeTranslator {
+  readonly unit: string;
+  abstract translate (size: number): string;
+  constructor (unit: string) {
+    this.unit = unit;
+  }
 }
 
+type TSizeTranslatorHolder = {
+  translator?: SizeTranslator
+}
 
 abstract class LayoutNode<T extends Node> {
   tag: TAG_TYPE = TAGS.NONE;
   tabWidth: number = 2;
+  sizeTranslatorHolder?: TSizeTranslatorHolder;
   abstract render(node: T): string;
 }
 
@@ -118,14 +125,21 @@ abstract class ThemeNode<T extends Node> {
 class Layout {
   private name: string = ''; // render name
   private layoutNodeList: Array<LayoutNode<Node>> = [];
-  private sizeTransformer: SizeTransform;
+  private sizeTranslatorHolder: TSizeTranslatorHolder = { };
+
+  public specifySizeTranslator<T extends SizeTranslator> (translator: T): void {
+    this.sizeTranslatorHolder.translator = translator;
+    this.layoutNodeList.forEach(node => node.sizeTranslatorHolder = this.sizeTranslatorHolder);
+  }
 
   public registerLayoutNode <T extends Node> (node: LayoutNode<T>) {
     let foundIndex = this.duplicatedLayoutNode(node);
+    node.sizeTranslatorHolder = this.sizeTranslatorHolder;
     if (foundIndex === -1) {
       this.layoutNodeList.push(node);
       return;
     }
+    console.warn('register a duplicated layout node: ', node.tag);
     this.layoutNodeList.splice(foundIndex, 1, node);
   }
 
@@ -136,7 +150,6 @@ class Layout {
         return;
       }
     }
-    debugger
     throw new Error('No Adapted LayoutNode: ' + node.tag);
   }
 
@@ -211,4 +224,4 @@ enum TAGS {
   TEXT
 }
 
-export { Node, DefaultNode, LayoutNode, ThemeNode, Layout, Theme, TAGS };
+export { Node, DefaultNode, LayoutNode, ThemeNode, Layout, Theme, TAGS, SizeTranslator };

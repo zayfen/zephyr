@@ -111,10 +111,7 @@ export class ImageLayout extends LayoutNode<Image> {
     sb.setIndent(node.level * this.tabWidth);
     let style = resolveStyle(node);
     let classString = resolveClassList(node);
-    sb.appendLine(`<view class="${classString}" style="${style}" ${resolveAttributes(node)}>`);
-    sb.appendLine(`  <image src="${node.attrList.src}"/>`);
-    sb.appendLine(`</view>`);
-
+    sb.appendLine(`<image src="${node.attrList.src}" class="${classString}" style="${style}"/>`);
     return sb.str();
   }
 }

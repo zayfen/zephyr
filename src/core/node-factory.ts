@@ -9,6 +9,36 @@ export class Page extends DefaultNode {
 export class Row extends DefaultNode {
   tag = TAGS.ROW;
   id: string = 'row-id';
+
+  useFlex () {
+    this.addAttr('__rowTypeFlex', true);
+  }
+
+  isRowTypeFlex (): boolean {
+    return this.attr('__rowTypeFlex') || false;
+  }
+
+  childrenCenterOnMainAxis () {
+    if (!this.isRowTypeFlex()) {
+      return;
+    }
+    this.addAttr('__childrenCenterOnMainAxis', true);
+  }
+
+  isChildrenCenterOnMainAxis (): boolean {
+    return this.attr('__childrenCenterOnMainAxis') || false;
+  }
+
+  childrenCenterOnCrossAxis () {
+    if (!this.isRowTypeFlex()) {
+      return;
+    }
+    this.addAttr('__childrenCenterOnCrossAxis', true);
+  }
+
+  isChildrenCenterOnCrossAxis (): boolean {
+    return this.attr('__childrenCenterOnCrossAxis') || false;
+  }
 }
 
 export class Col extends DefaultNode {
@@ -16,19 +46,19 @@ export class Col extends DefaultNode {
   id: string = 'col-id';
 
   setSpan (span: number) {
-    this.attrList.span = span;
+    this.addAttr('__span', span);
   }
 
   getSpan (): number {
-    return this.attrList.span || 24;
+    return this.attr('__span') || 24;
   }
 
   setGutter (gutter: number) {
-    this.attrList.gutter = gutter;
+    this.addAttr('__gutter', gutter);
   }
 
   getGutter (): number {
-    return this.attrList.gutter || 0;
+    return this.attr('__gutter') || 0;
   }
 }
 
@@ -37,11 +67,11 @@ export class Card extends DefaultNode {
   id: string = 'col-card';
 
   setTitle (title: string) {
-    this.addAttr('title', title);
+    this.addAttr('__title', title);
   }
 
   getTitle (): string {
-    return this.attrList.title || '';
+    return this.attr('__title', '');
   }
 }
 
@@ -59,11 +89,11 @@ export class Button extends DefaultNode {
   id: string = 'button-id';
 
   setButtonText (text: string) {
-    this.attrList.buttonText = text;
+    this.addAttr('__buttonText', text);
   }
 
   getButtonText (): string {
-    return this.attrList.buttonText;
+    return this.attr('__buttonText', 'undefined');
   }
 }
 
@@ -72,11 +102,11 @@ export class Text extends DefaultNode {
   id: string = 'text-id';
 
   setText (text: string) {
-    this.addAttr('text', text);
+    this.addAttr('__text', text);
   }
 
   getText (): string {
-    return this.attr('text');
+    return this.attr('__text', '');
   }
 
   setFontSize (fontSize: number) {

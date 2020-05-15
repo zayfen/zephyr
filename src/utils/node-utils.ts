@@ -1,5 +1,6 @@
 import { Node } from '../core/prototype';
-import { camelCase2kebabCase } from './string-utils';
+import { camelCase2kebabCase, splitCssPropertyValue } from './string-utils';
+
 
 export  function resolveClassList (node: Node): string {
     let finalClassList: string[] = [];
@@ -19,11 +20,11 @@ export  function resolveClassList (node: Node): string {
   }
 
   export function resolveAttributes (node: Node): string {
-    let validAttrList: string[] = node.attrWhiteList ? node.attrWhiteList : Object.keys(node.attrList);
-    if (!validAttrList || !Array.isArray(validAttrList)) {
-      return '';
-    }
-
+    // let validAttrList: string[] = node.attrWhiteList ? node.attrWhiteList : Object.keys(node.attrList);
+    // if (!validAttrList || !Array.isArray(validAttrList)) {
+    //   return '';
+    // }
+    let validAttrList: string[] = Object.keys(node.attrList).filter(key => key.slice(0,2) !== '__');
     let attributes = validAttrList.reduce((prev: string, curr: string) => {
       if (node.attrList.hasOwnProperty(curr)) {
         let val: string|number = node.attrList[curr];
@@ -41,7 +42,21 @@ export  function resolveClassList (node: Node): string {
   export function resolveStyle (node: Node): string {
     let keys = Object.keys(node.style);
     return keys.reduce((prev, curr) => {
-      return prev + camelCase2kebabCase(curr) + ':' + node.style[curr] + ';';
+      // 需要对style做尺寸转换
+      let styleValue: string|number = node.style[curr];
+      let styleValueArr = splitCssPropertyValue(<string> styleValue);
+      // translate layout size
+      if (node.layoutNode.sizeTranslatorHolder.translator) {
+        let translator = node.layoutNode.sizeTranslatorHolder.translator;
+        styleValue = styleValueArr.map((value: string | number) => {
+          if (typeof value === 'number') {
+            return translator.translate(value) + translator.unit;
+          }
+          return value;
+        }).join(' ');
+      }
+
+      return prev + camelCase2kebabCase(curr) + ':' + styleValue + ';';
     }, '');
   }
 
