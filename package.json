@@ -1,5 +1,5 @@
 {
-  "name": "uiengine",
+  "name": "zephyr",
   "publishConfig": {},
   "version": "0.1.0",
   "description": "将自定义的AST转换成 HTML 和 WXML",
