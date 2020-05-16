@@ -9,7 +9,8 @@
     "test": "test"
   },
   "scripts": {
-    "dist": "tsc && cpx src/themes/**/*.less dist/style/ && wxss dist/style/base/base-theme.less",
+    "dist": "tsc && cpx src/themes/base/**.less dist/style/",
+    "postdist": "wxss dist/style/base-theme.less",
     "test": "node ./dist/index.js",
     "publish": "npm publish",
     "prepublish": "npm run dist"
@@ -27,6 +28,7 @@
   "devDependencies": {
     "cpx": "^1.5.0",
     "typescript": "^3.8.3",
-    "wxss-cli": "^1.0.4"
+    "wxss-cli": "^1.0.4",
+    "braces": "^2.3.1"
   }
 }
