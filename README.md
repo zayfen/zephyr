@@ -1,17 +1,17 @@
-# UIEngine
-## 什么是UIEngine？
+# zephyr
+## 什么是zephyr？
 
-UIEngine是一个可以将对象树转换成特定的视图的框架。比如可以通过`html-layout`和`theme`转成HTML文件，也可以通过`wxml-layout` 和 `theme`转换成WXML文件。
+zephyr是一个可以将对象树转换成特定的视图的框架。比如可以通过`html-layout`和`theme`转成HTML文件，也可以通过`wxml-layout` 和 `theme`转换成WXML文件。
 
-也可以通过自定义的Layout和Theme，通过UIEngine转换成你自己的目标视图。
+也可以通过自定义的Layout和Theme，通过zephyr转换成你自己的目标视图。
 
-## 为什么需要UIEngine？
+## 为什么需要zephyr？
 
-当我们面临着需要将同一个视图翻译成不同的平台的版本文件时，我们传统的做法是分别对应每个平台写一套视图代码，当需求更改的时候，每一个平台的代码都要相应的更改，这样对开发人员来说是极其繁琐的事情，而且维护成本高，需求完成周期拉长。当你使用UIEngine的时候，在定制好每个平台的基础layout对象后，你只需维护UIEngine的对象树，就能同时产出各个平台的视图代码；而且通过给UIEngine指定不同的主题，可以方便的更换视图的样式，对于动态修改主题的需求来说，这无疑是一个完美的解决方案。
+当我们面临着需要将同一个视图翻译成不同的平台的版本文件时，我们传统的做法是分别对应每个平台写一套视图代码，当需求更改的时候，每一个平台的代码都要相应的更改，这样对开发人员来说是极其繁琐的事情，而且维护成本高，需求完成周期拉长。当你使用zephyr的时候，在定制好每个平台的基础layout对象后，你只需维护zephyr的对象树，就能同时产出各个平台的视图代码；而且通过给zephyr指定不同的主题，可以方便的更换视图的样式，对于动态修改主题的需求来说，这无疑是一个完美的解决方案。
 
-## UIEngine的架构图（逻辑视图）
+## zephyr的架构图（逻辑视图）
 
-![](./UIEngine系统架构（逻辑视图）.svg)
+![](./zephyr系统架构（逻辑视图）.svg)
 
 ## Tutorial
 
@@ -103,7 +103,7 @@ module.exports = exports = {
 
 ```javascript
 // 自定义组件
-let engine = new UIEngine();
+let engine = new zephyr();
 // 在布局管理中注册自定义组件的布局
 BasicHTMLLayout.registerLayoutNode(new RoundImgWithTitleLayout);
 // 在主题管理中注册自定义组件的布局
@@ -124,12 +124,12 @@ console.log(engine.render(riwt));
 
 ```javascript
 
-const {Components,  UIEngine, BasicTheme, BasicWXMLLayout, BasicHTMLLayout} = require('../dist');
+const {Components,  zephyr, BasicTheme, BasicWXMLLayout, BasicHTMLLayout} = require('../dist');
 const { Page, Card, Row, Col, Button, Image, Text } = Components;
 
 let page = new Page();
 
-let engine = new UIEngine(page);
+let engine = new zephyr(page);
 
 let card = new Card().appendTo(page);
 card.setTitle('我是卡片的标题');
@@ -233,3 +233,8 @@ console.log(wxml);
 一张在浏览器中的效果图
 
 <img src="./demo.png" alt="demo" style="zoom:25%;" />
+
+
+## TODO
+[x] add size translation support
+[] add logic component support
