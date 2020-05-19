@@ -81,7 +81,7 @@ abstract class DefaultNode implements Node {
   }
 
   attr (key: string, elseDefault?: any): any {
-    return this.attrList[key] === void 0 ? this.attrList[key] : elseDefault;
+    return this.attrList[key] === void 0 ? elseDefault : this.attrList[key];
   }
 
   addStyle (key: string, value: string | number): this {

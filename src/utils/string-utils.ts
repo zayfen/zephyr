@@ -135,8 +135,10 @@ export function splitCssPropertyValue (propValue: string): TPropertyAsArray {
       if (forward === propValue.length - 1) {
         forward++;
       }
-
-      result.push(tryConvertStringToNumber(propValue.slice(start, forward)));
+      let value = propValue.slice(start, forward).trim() as string
+      // check if is percent number
+      let isPercentFmt = value[value.length-1] === '%' // 百分比不转换
+      result.push(isPercentFmt ? value : tryConvertStringToNumber(value));
       while (forward < propValue.length && isspace(propValue.charAt(forward))) {
         forward++;
       }

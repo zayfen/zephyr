@@ -58,7 +58,7 @@ export class Col extends DefaultNode {
   }
 
   getGutter (): number {
-    return this.attr('__span') || 0;
+    return this.attr('__gutter') || 0;
   }
 }
 
