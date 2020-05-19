@@ -19,6 +19,7 @@ interface Node {
   appendTo(parent: Node): this,
   addAttr(key: string, value: any): this,
   addStyle(key: string, value: string | number): this,
+  addStyles(styleObject: { [key: string]: string | number }): this,
   addCustomClass(cls: string): this,
   addClass(cls: string): this,
   attr(key: string, elseDefault?: any): any,
@@ -86,6 +87,15 @@ abstract class DefaultNode implements Node {
 
   addStyle (key: string, value: string | number): this {
     setStyle(this, key, value);
+    return this;
+  }
+
+  addStyles (styleObject: { [key: string]: string | number }): this {
+
+    for (let key of Object.keys(styleObject)) {
+      this.addStyle(key, styleObject[key]);
+    }
+
     return this;
   }
 
