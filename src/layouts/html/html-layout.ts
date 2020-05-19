@@ -62,7 +62,7 @@ export class ColLayout extends LayoutNode<Col> {
     let sb = new StringBuilder();
     sb.setIndent(node.level * this.tabWidth);
     let classString = resolveClassList(node);
-    sb.appendLine(`<div class="${classString}" style="${resolveClassList(node)}" ${resolveAttributes(node)}>`);
+    sb.appendLine(`<div class="${classString}" style="${resolveStyle(node)}" ${resolveAttributes(node)}>`);
 
     if (node.children && node.children.length > 0) {
       node.children.forEach(child => {

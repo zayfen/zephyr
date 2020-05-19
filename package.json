@@ -1,6 +1,8 @@
 {
   "name": "zephyr",
-  "publishConfig": {},
+  "publishConfig": {
+    "registry": "http://registry.npmjs.org"
+  },
   "version": "0.1.0",
   "description": "将自定义的AST转换成 HTML 和 WXML",
   "main": "dist/index.js",
@@ -12,8 +14,7 @@
     "dist": "tsc && cpx src/themes/base/**.less dist/style/",
     "postdist": "wxss dist/style/base-theme.less",
     "test": "node ./dist/index.js",
-    "publish": "npm publish",
-    "prepublish": "npm run dist"
+    "publish": "npm publish"
   },
   "repository": {
     "type": "git",

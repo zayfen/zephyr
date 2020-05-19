@@ -149,9 +149,3 @@ export function splitCssPropertyValue (propValue: string): TPropertyAsArray {
 
   return result;
 }
-
-
-// some tests
-
-console.log(splitCssPropertyValue('1px solid rgba(0, 0, 0, 1);'));
-console.log(splitCssPropertyValue('a11111111111px abc'));
