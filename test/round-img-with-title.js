@@ -69,7 +69,7 @@ class RoundImgWithTitleTheme extends ThemeNode {
 }
 
 
-module.exports = exports = {
+exports = module.exports = {
   RoundImgWithTitleTheme,
   RoundImgWithTitle,
   RoundImgWithTitleLayout
