@@ -46,7 +46,8 @@ export  function resolveClassList (node: Node): string {
       let styleValue: string|number = node.style[curr];
       let styleValueArr = splitCssPropertyValue(<string> styleValue);
       // translate layout size
-      if (node.layoutNode.sizeTranslatorHolder.translator) {
+      let isVariable: boolean = curr.slice(0, 2) === '--' // css var, don't translate, e.g. :root { --scale-factor: 1 }
+      if (node.layoutNode.sizeTranslatorHolder.translator && !isVariable) {
         let translator = node.layoutNode.sizeTranslatorHolder.translator;
         styleValue = styleValueArr.map((value: string | number) => {
           if (typeof value === 'number') {

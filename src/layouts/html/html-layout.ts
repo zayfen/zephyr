@@ -152,7 +152,7 @@ export class TextLayout extends LayoutNode<Text> {
     let style = resolveStyle(node);
     let classString = resolveClassList(node);
     let text = node.getText();
-    sb.appendLine(`<div class="${classString}">`);
+    sb.appendLine(`<div class="${classString}" style="${style}">`);
     sb.appendLine(`<span>${text}</span>`)
     sb.appendLine('</div>');
 

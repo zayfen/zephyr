@@ -66,7 +66,7 @@ function tryConvertStringToNumber (s: string | number): number | string {
 
 export function trim (s: string, chars: string): string {
   // step1: trim spaces
-  s = s.trim();
+  s = ('' + s).trim()
 
   // step2: trim specified chars
   let leftBoundary: number = 0;

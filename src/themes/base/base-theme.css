@@ -9,6 +9,9 @@ body,
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
 }
+.ui-page {
+  --scale-factor: 1;
+}
 /* ui-row */
 .ui-row {
   position: relative;
@@ -122,14 +125,14 @@ body,
   overflow: hidden;
   color: #303133;
   transition: 0.3s;
-  box-shadow: 2px 2px 12px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: calc(var(--scale-factor) * 2px) calc(var(--scale-factor) * 2px) calc(var(--scale-factor) * 12px) 0 rgba(0, 0, 0, 0.1);
 }
 .ui-card__title {
   text-align: left;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 40px;
-  padding-left: 20px;
+  padding-left: calc(var(--scale-factor) * 15px);
+  font-size: calc(var(--scale-factor) * 18px);
+  color: #333;
+  line-height: calc(var(--scale-factor) * 24px);
 }
 /* ui-button */
 .ui-button {
@@ -150,9 +153,9 @@ body,
   -moz-user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
-  padding: 12px 20px;
-  font-size: 14px;
-  border-radius: 4px;
+  padding: calc(var(--scale-factor) * 12px) calc(var(--scale-factor) * 20px);
+  font-size: calc(var(--scale-factor) * 14px);
+  border-radius: calc(var(--scale-factor) * 4px);
 }
 .ui-button--text {
   border-color: transparent;
@@ -169,11 +172,19 @@ body,
   overflow: hidden;
 }
 .ui-round-image-text {
-  padding-bottom: 10px;
+  display: inline-block;
+}
+.ui-round-image-text .ui-image {
+  display: block;
 }
 .ui-round-image-text img {
+  display: inline-block;
+  line-height: 0;
   border-radius: 50%;
+  width: 100%;
+  height: 100%;
+  object-fit: scale-down;
 }
 .ui-round-image-text .ui-text {
-  font-size: 12px;
+  font-size: calc(var(--scale-factor) * 14px);
 }
