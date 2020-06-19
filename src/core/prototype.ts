@@ -1,5 +1,6 @@
 // 节点接口
 import { setStyle } from "../utils/node-utils";
+import { randomKey } from "../utils/misc-utils";
 
 type TAG_TYPE = TAGS | string
 
@@ -15,6 +16,8 @@ interface Node {
   children: Array<Node>
   themeNode: ThemeNode<Node>,
   layoutNode: LayoutNode<Node>,
+  layout: Layout,
+  theme: Theme,
   append(child: Node): this,
   appendTo(parent: Node): this,
   addAttr(key: string, value: any): this,
@@ -23,7 +26,8 @@ interface Node {
   addCustomClass(cls: string): this,
   addClass(cls: string): this,
   attr(key: string, elseDefault?: any): any,
-  addWhiteListAttr(key: string): this
+  addWhiteListAttr(key: string): this,
+  render (layout?: Layout, theme?: Theme): string
 }
 
 
@@ -39,15 +43,21 @@ abstract class DefaultNode implements Node {
   children: Node[] = [];
   themeNode: ThemeNode<Node>;
   layoutNode: LayoutNode<Node>;
+  layout: Layout;
+  theme: Theme;
 
-  constructor() {
+  constructor(tag?: TAG_TYPE) {
     this.attrWhiteList = [];
-    this.id = '';
     this.level = 0;
     this.style = {};
     this.customClassList = [];
     this.classList = [];
     this.children = [];
+    this.tag = tag
+    this.id = randomKey(8)
+    if (this.tag) {
+      this.id = this.tag + '-' + this.id
+    }
   }
 
   append (child: Node): this {
@@ -103,6 +113,15 @@ abstract class DefaultNode implements Node {
     this.attrWhiteList.push(key);
     return this;
   }
+
+  render (layout?: Layout, theme?: Theme): string {
+    layout?.injectLayoutNode(this)
+    theme?.injectThemeNode(this)
+    if (this.layoutNode) {
+      return this.layoutNode.render(this)
+    }
+    throw new Error('No layoutNode bind to ' + this)
+  }
 }
 
 // 尺寸转换的接口
@@ -119,15 +138,34 @@ type TSizeTranslatorHolder = {
 }
 
 abstract class LayoutNode<T extends Node> {
+
   tag: TAG_TYPE = TAGS.NONE;
   tabWidth: number = 2;
   sizeTranslatorHolder?: TSizeTranslatorHolder;
+
+  constructor (tag?: TAG_TYPE) {
+    this.tag = tag
+    this.tabWidth = 2
+  }
+
+  install (layout: Layout) {
+    layout.registerLayoutNode(this)
+  }
+
   abstract render(node: T): string;
 }
 
 
 abstract class ThemeNode<T extends Node> {
   tag: TAG_TYPE = TAGS.NONE;
+  constructor (tag?: TAG_TYPE) {
+    this.tag = tag
+  }
+
+  install (theme: Theme) {
+    theme.registerThemeNode(this)
+  }
+
   abstract inject(node: T): T;
 }
 
@@ -157,10 +195,29 @@ class Layout {
     for (let i = 0; i < this.layoutNodeList.length; i++) {
       if (this.layoutNodeList[i].tag === node.tag) {
         node.layoutNode = this.layoutNodeList[i];
+        node.layout = this;
         return;
       }
     }
     throw new Error('No Adapted LayoutNode: ' + node.tag);
+  }
+
+  public findLayoutNode <T extends Node> (node: T): LayoutNode<T> {
+    let tag: TAG_TYPE = node.tag
+    return this.findLayoutNodeByTag(tag)
+  }
+
+  public findLayoutNodeByTag (tag: TAG_TYPE): LayoutNode<Node> {
+    for (let i = 0; i < this.layoutNodeList.length; i++) {
+      if (this.layoutNodeList[i].tag === tag) {
+        return this.layoutNodeList[i]
+      }
+    }
+    throw new Error(`findLayoutNodeByTAg error: no layoutnode which tag is ${tag} found`)
+  }
+
+  public use <T extends Node> (node: LayoutNode<T>) {
+    node.install(this)
   }
 
   private duplicatedLayoutNode<T extends Node> (node: LayoutNode<T>): number {
@@ -212,11 +269,17 @@ class Theme {
         node.themeNode = this.themeNodeList[i];
         node.classList.splice(0, node.classList.length);
         node.themeNode.inject(node);
+        node.theme = this
         return;
       }
     }
 
     throw new Error('No Adapted ThemeNode: ' + node.tag);
+  }
+
+
+  public use <T extends Node> (themeNode: ThemeNode<T>) {
+    themeNode.install(this)
   }
 
 }

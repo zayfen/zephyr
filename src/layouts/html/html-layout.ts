@@ -11,14 +11,16 @@ import { resolveStyle, resolveClassList, resolveAttributes } from "../../utils/n
 const kBasicLayout = new Layout();
 
 export class PageLayout extends LayoutNode<Page> {
-  tag = TAGS.PAGE;
+  constructor () {
+    super(TAGS.PAGE)
+  }
 
   public render (node: Page): string {
     let sb = new StringBuilder();
     sb.setIndent(node.level * this.tabWidth);
     let style = resolveStyle(node);
     let classString = resolveClassList(node);
-    sb.appendLine(`<div class="${classString}" style="${style}" ${resolveAttributes(node)}>`);
+    sb.appendLine(`<div id="${node.id}" class="${classString}" style="${style}" ${resolveAttributes(node)}>`);
 
     if (node.children && node.children.length > 0) {
       node.children.forEach(child => {
@@ -30,17 +32,19 @@ export class PageLayout extends LayoutNode<Page> {
     return sb.str();
   }
 }
-kBasicLayout.registerLayoutNode(new PageLayout);
+kBasicLayout.use(new PageLayout)
 
 // 横向布局
 export class RowLayout extends LayoutNode<Row> {
-  tag = TAGS.ROW;
+  constructor () {
+    super(TAGS.ROW)
+  }
   public render (node: Row): string {
     let sb = new StringBuilder();
     sb.setIndent(node.level * this.tabWidth);
     let style = resolveStyle(node);
     let classString = resolveClassList(node);
-    sb.appendLine(`<div class="${classString}" style="${style}" ${resolveAttributes(node)}>`);
+    sb.appendLine(`<div id="${node.id}" class="${classString}" style="${style}" ${resolveAttributes(node)}>`);
 
     if (node.children && node.children.length > 0) {
       node.children.forEach(child => {
@@ -52,17 +56,19 @@ export class RowLayout extends LayoutNode<Row> {
     return sb.str();
   }
 }
-kBasicLayout.registerLayoutNode(new RowLayout());
+kBasicLayout.use(new RowLayout)
 
 // 列布局
 export class ColLayout extends LayoutNode<Col> {
-  tag = TAGS.COL;
+  constructor () {
+    super(TAGS.COL)
+  }
 
   public render (node: Col): string {
     let sb = new StringBuilder();
     sb.setIndent(node.level * this.tabWidth);
     let classString = resolveClassList(node);
-    sb.appendLine(`<div class="${classString}" style="${resolveStyle(node)}" ${resolveAttributes(node)}>`);
+    sb.appendLine(`<div id="${node.id}" class="${classString}" style="${resolveStyle(node)}" ${resolveAttributes(node)}>`);
 
     if (node.children && node.children.length > 0) {
       node.children.forEach(child => {
@@ -75,18 +81,21 @@ export class ColLayout extends LayoutNode<Col> {
     return sb.str();
   }
 }
-kBasicLayout.registerLayoutNode(new ColLayout());
+kBasicLayout.use(new ColLayout)
 
 // 卡片布局
 export class CardLayout extends LayoutNode<Card> {
-  tag = TAGS.CARD;
+  constructor () {
+    super(TAGS.CARD)
+  }
+
   public render (node: Card): string {
     let sb = new StringBuilder();
     sb.setIndent(node.level * this.tabWidth);
     let style = resolveStyle(node);
     let classString = resolveClassList(node);
 
-    sb.appendLine(`<div class="${classString}" style="${style}" ${resolveAttributes(node)}>`)
+    sb.appendLine(`<div id="${node.id}" class="${classString}" style="${style}" ${resolveAttributes(node)}>`)
     let card: Card = node;
     if (card.getTitle()) { // 设置了title
       sb.appendLine(`<div class="ui-card__title"><span>${card.getTitle()}</span></div>`);
@@ -100,31 +109,35 @@ export class CardLayout extends LayoutNode<Card> {
     return sb.str();
   }
 }
-kBasicLayout.registerLayoutNode(new CardLayout());
+kBasicLayout.use(new CardLayout)
 
 
 // 图像
 export class ImageLayout extends LayoutNode<Image> {
-  tag = TAGS.IMAGE;
+  constructor () {
+    super(TAGS.IMAGE)
+  }
 
   public render (node: Image): string {
     let sb = new StringBuilder();
     sb.setIndent(node.level * this.tabWidth);
     let style = resolveStyle(node);
     let classString = resolveClassList(node);
-    sb.appendLine(`<div class="${classString}" style="${style}" ${resolveAttributes(node)}>`);
-    sb.appendLine(`  <img src="${node.attrList.src}"/>`);
+    sb.appendLine(`<div id="${node.id}" class="${classString}" style="${style}" ${resolveAttributes(node)}>`);
+    sb.appendLine(`  <img src="${node.attrList.src}" style="display: block; width: 100%; height: 100%; margin: 0; padding: 0;"/>`);
     sb.appendLine(`</div>`);
 
     return sb.str();
   }
 }
-kBasicLayout.registerLayoutNode(new ImageLayout());
+kBasicLayout.use(new ImageLayout)
 
 
 // 按钮
 export class ButtonLayout extends LayoutNode<Button> {
-  tag = TAGS.BUTTON;
+  constructor () {
+    super(TAGS.BUTTON)
+  }
 
   public render (node: Button): string {
     let sb = new StringBuilder();
@@ -134,17 +147,19 @@ export class ButtonLayout extends LayoutNode<Button> {
 
     let button = node as Button;
     let buttonText = button.getButtonText();
-    sb.appendLine(`<button class="${classString}" style="${style}"  ${resolveAttributes(node)}>`);
-    sb.appendLine(`  <span>${node.attrList.buttonText}</span>`);
+    sb.appendLine(`<button id="${node.id}" class="${classString}" style="${style}"  ${resolveAttributes(node)}>`);
+    sb.appendLine(`  <span>${buttonText}</span>`);
     sb.appendLine('</button>');
     return sb.str();
   }
 }
-kBasicLayout.registerLayoutNode(new ButtonLayout);
+kBasicLayout.use(new ButtonLayout)
 
 // 文字
 export class TextLayout extends LayoutNode<Text> {
-  tag = TAGS.TEXT;
+  constructor () {
+    super(TAGS.TEXT)
+  }
 
   public render (node: Text): string {
     let sb = new StringBuilder();
@@ -152,13 +167,13 @@ export class TextLayout extends LayoutNode<Text> {
     let style = resolveStyle(node);
     let classString = resolveClassList(node);
     let text = node.getText();
-    sb.appendLine(`<div class="${classString}" style="${style}">`);
+    sb.appendLine(`<div id="${node.id}" class="${classString}" style="${style}">`);
     sb.appendLine(`<span>${text}</span>`)
     sb.appendLine('</div>');
 
     return sb.str();
   }
 }
-kBasicLayout.registerLayoutNode(new TextLayout);
+kBasicLayout.use(new TextLayout)
 
 export const BasicHTMLLayout = kBasicLayout;

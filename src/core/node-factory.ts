@@ -2,13 +2,15 @@ import { TAGS, DefaultNode } from './prototype';
 
 
 export class Page extends DefaultNode {
-  tag = TAGS.PAGE;
-  id: string = 'page-id';
+  constructor () {
+    super(TAGS.PAGE)
+  }
 }
 
 export class Row extends DefaultNode {
-  tag = TAGS.ROW;
-  id: string = 'row-id';
+  constructor () {
+    super(TAGS.ROW)
+  }
 
   useFlex () {
     this.addAttr('__rowTypeFlex', true);
@@ -42,8 +44,9 @@ export class Row extends DefaultNode {
 }
 
 export class Col extends DefaultNode {
-  tag = TAGS.COL;
-  id: string = 'col-id';
+  constructor () {
+    super(TAGS.COL)
+  }
 
   setSpan (span: number) {
     this.addAttr('__span', span);
@@ -63,8 +66,9 @@ export class Col extends DefaultNode {
 }
 
 export class Card extends DefaultNode {
-  tag = TAGS.CARD;
-  id: string = 'col-card';
+  constructor () {
+    super(TAGS.CARD)
+  }
 
   setTitle (title: string) {
     this.addAttr('__title', title);
@@ -76,17 +80,18 @@ export class Card extends DefaultNode {
 }
 
 export class Image extends DefaultNode {
-  tag = TAGS.IMAGE;
-  id: string = 'image-id';
-
+  constructor () {
+    super(TAGS.IMAGE)
+  }
   setSrc (src: string) {
     this.attrList.src = src;
   }
 }
 
 export class Button extends DefaultNode {
-  tag = TAGS.BUTTON;
-  id: string = 'button-id';
+  constructor () {
+    super(TAGS.BUTTON)
+  }
 
   setButtonText (text: string) {
     this.addAttr('__buttonText', text);
@@ -98,8 +103,9 @@ export class Button extends DefaultNode {
 }
 
 export class Text extends DefaultNode {
-  tag = TAGS.TEXT;
-  id: string = 'text-id';
+  constructor () {
+    super(TAGS.TEXT)
+  }
 
   setText (text: string) {
     this.addAttr('__text', text);
