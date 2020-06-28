@@ -27,7 +27,9 @@ interface Node {
   addClass(cls: string): this,
   attr(key: string, elseDefault?: any): any,
   addWhiteListAttr(key: string): this,
-  render (layout?: Layout, theme?: Theme): string
+  render (layout?: Layout, theme?: Theme): string,
+  update (): void,
+  onMounted (): void
 }
 
 
@@ -121,6 +123,14 @@ abstract class DefaultNode implements Node {
       return this.layoutNode.render(this)
     }
     throw new Error('No layoutNode bind to ' + this)
+  }
+
+  update () {
+    console.warn('update not implemented ' + `(tag: ${this.tag}; id: ${this.id})`)
+  }
+
+  onMounted () {
+    console.warn('onMounted not implemented ' + `(tag: ${this.tag}; id: ${this.id})`)
   }
 }
 
