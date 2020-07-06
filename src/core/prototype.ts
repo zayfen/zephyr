@@ -2,7 +2,7 @@
 import { setStyle } from "../utils/node-utils";
 import { randomKey } from "../utils/misc-utils";
 
-type TAG_TYPE = TAGS | string
+export type TAG_TYPE = TAGS | string
 
 interface Node {
   tag: TAG_TYPE,
@@ -29,7 +29,8 @@ interface Node {
   addWhiteListAttr(key: string): this,
   render (layout?: Layout, theme?: Theme): string,
   update (): void,
-  onMounted (): void
+  onMounted (): void,
+  onUpdate (): void
 }
 
 
@@ -117,6 +118,13 @@ abstract class DefaultNode implements Node {
   }
 
   render (layout?: Layout, theme?: Theme): string {
+    if (!layout) {
+      layout = this.layout
+    }
+    if (!theme) {
+      theme = this.theme
+    }
+
     layout?.injectLayoutNode(this)
     theme?.injectThemeNode(this)
     if (this.layoutNode) {
@@ -127,10 +135,16 @@ abstract class DefaultNode implements Node {
 
   update () {
     console.warn('update not implemented ' + `(tag: ${this.tag}; id: ${this.id})`)
+    this.onUpdate()
+    this.children && this.children.forEach(child => child.update())
   }
 
   onMounted () {
     console.warn('onMounted not implemented ' + `(tag: ${this.tag}; id: ${this.id})`)
+  }
+
+  onUpdate () {
+    console.warn('onUpdate not implemented ' + `(tag: ${this.tag}; id: ${this.id})`)
   }
 }
 
