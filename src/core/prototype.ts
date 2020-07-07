@@ -13,7 +13,8 @@ interface Node {
   classList: string[],
   attrList: { [key: string]: string | number },
   attrWhiteList?: string[], // 属性白名单, 自由在白名单中的属性才能render到视图节点上
-  children: Array<Node>
+  children: Array<Node>,
+  parent: Node | null,
   themeNode: ThemeNode<Node>,
   layoutNode: LayoutNode<Node>,
   layout: Layout,
@@ -43,6 +44,7 @@ abstract class DefaultNode implements Node {
   customClassList: string[] = [];
   classList: string[] = [];
   attrList: { [key: string]: any; } = {};
+  parent: Node | null
   children: Node[] = [];
   themeNode: ThemeNode<Node>;
   layoutNode: LayoutNode<Node>;
@@ -66,12 +68,14 @@ abstract class DefaultNode implements Node {
   append (child: Node): this {
     this.children.push(child);
     child.level = this.level + 1;
+    child.parent = this
     return this;
   }
 
   appendTo (node: Node): this {
     node.children.push(this);
     this.level = node.level + 1;
+    this.parent = node
     return this;
   }
 
@@ -123,6 +127,19 @@ abstract class DefaultNode implements Node {
     }
     if (!theme) {
       theme = this.theme
+    }
+
+    if (!layout) { // 继承父节点,祖先节点的layout
+      let parent = this.parent
+      while (parent && !layout) {
+        layout = this.parent.layout
+      }
+    }
+    if (!theme) { // 继承父节点,祖先节点的theme
+      let parent = this.parent
+      while (parent && !theme) {
+        theme = this.parent.theme
+      }
     }
 
     layout?.injectLayoutNode(this)

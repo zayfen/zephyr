@@ -40,6 +40,34 @@ export class UIEngine {
     return this;
   }
 
+  injectLayoutTheme (node: Node, layout: Layout, theme: Theme) {
+    if (!node) {
+      throw new Error('node is null')
+    }
+
+    if (!layout && !theme) {
+      throw new Error('layout and theme are null')
+    }
+
+    // step 1: inject theme and layout to Node
+    let queue: Array<Node> = [];
+    queue.push(node);
+    while (queue.length > 0) {
+      let currentNode = queue.shift();
+      if (currentNode?.children && currentNode.children.length > 0) {
+        currentNode.children.forEach(node => queue.push(node));
+      }
+      if (theme) {
+        theme.injectThemeNode(currentNode);
+      }
+
+      if (layout) {
+        layout.injectLayoutNode(currentNode);
+      }
+    }
+
+  }
+
   render<T extends Node>(root?: T) {
     if (root) {
       this.root = root;
@@ -54,16 +82,7 @@ export class UIEngine {
     }
 
     // step 1: inject theme and layout to Node
-    let queue: Array<Node> = [];
-    queue.push(this.root);
-    while (queue.length > 0) {
-      let currentNode = queue.shift();
-      if (currentNode?.children && currentNode.children.length > 0) {
-        currentNode.children.forEach(node => queue.push(node));
-      }
-      this.theme.injectThemeNode(currentNode);
-      this.layout.injectLayoutNode(currentNode);
-    }
+    this.injectLayoutTheme(this.root, this.layout, this.theme)
 
     // step2: render root
     let dom = this.root.layoutNode.render(this.root);
