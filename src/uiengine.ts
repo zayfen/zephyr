@@ -111,7 +111,12 @@ export class UIEngine {
     if (node) {
       this.setRootNode(node)
     }
-
+    
+    // remove _target children
+    while (_target.firstChild) {
+      _target.removeChild(_target.lastChild)
+    }
+    
     // 用MutationObserver监听挂载是否完成
     // 如果挂载完成,就对树进行后序遍历,依次调用onMounted方法
     this.observer.observe(_target, { childList: true, subtree: false })
