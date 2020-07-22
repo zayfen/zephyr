@@ -151,9 +151,7 @@ abstract class DefaultNode implements Node {
   }
 
   update () {
-    console.warn('update not implemented ' + `(tag: ${this.tag}; id: ${this.id})`)
     this.onUpdate()
-    this.children && this.children.forEach(child => child.update())
   }
 
   onMounted () {
