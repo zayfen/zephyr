@@ -1,7 +1,7 @@
 import { UIEngine } from "./uiengine";
 import {
-  Node,
-  DefaultNode,
+  IVNode,
+  VNode,
   Layout,
   LayoutNode,
   Theme,
@@ -20,8 +20,8 @@ import * as StringUtils from './utils/string-utils';
 // 原型接口
 export {
   UIEngine,
-  Node,
-  DefaultNode,
+  IVNode,
+  VNode,
   Layout,
   LayoutNode,
   Theme,
@@ -37,9 +37,8 @@ export {
   BasicWXMLLayout
 }
 
-// 到处Utils
+// 导出Utils
 export {
   NodeUtils,
   StringUtils
 }
-

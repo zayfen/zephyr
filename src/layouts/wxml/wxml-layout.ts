@@ -10,9 +10,7 @@ import { resolveStyle, resolveClassList, resolveAttributes } from "../../utils/n
 const kBasicWXMLLayout = new Layout();
 
 export class PageLayout extends LayoutNode<Page> {
-  constructor () {
-    super(TAGS.PAGE)
-  }
+  tag = TAGS.PAGE;
 
   public render (node: Page): string {
     let sb = new StringBuilder();
@@ -31,13 +29,11 @@ export class PageLayout extends LayoutNode<Page> {
     return sb.str();
   }
 }
-kBasicWXMLLayout.use(new PageLayout)
+kBasicWXMLLayout.registerLayoutNode(new PageLayout);
 
 // 横向布局
 export class RowLayout extends LayoutNode<Row> {
-  constructor () {
-    super(TAGS.ROW)
-  }
+  tag = TAGS.ROW;
   public render (node: Row): string {
     let sb = new StringBuilder();
     sb.setIndent(node.level * this.tabWidth);
@@ -55,13 +51,12 @@ export class RowLayout extends LayoutNode<Row> {
     return sb.str();
   }
 }
-kBasicWXMLLayout.use(new RowLayout)
+kBasicWXMLLayout.registerLayoutNode(new RowLayout());
 
 // 列布局
 export class ColLayout extends LayoutNode<Col> {
-  constructor () {
-    super(TAGS.COL)
-  }
+  tag = TAGS.COL;
+
   public render (node: Col): string {
     let sb = new StringBuilder();
     sb.setIndent(node.level * this.tabWidth);
@@ -80,13 +75,11 @@ export class ColLayout extends LayoutNode<Col> {
     return sb.str();
   }
 }
-kBasicWXMLLayout.use(new ColLayout)
+kBasicWXMLLayout.registerLayoutNode(new ColLayout());
 
 // 卡片布局
 export class CardLayout extends LayoutNode<Card> {
-  constructor () {
-    super(TAGS.CARD)
-  }
+  tag = TAGS.CARD;
   public render (node: Card): string {
     let sb = new StringBuilder();
     sb.setIndent(node.level * this.tabWidth);
@@ -106,14 +99,12 @@ export class CardLayout extends LayoutNode<Card> {
     return sb.str();
   }
 }
-kBasicWXMLLayout.use(new CardLayout)
+kBasicWXMLLayout.registerLayoutNode(new CardLayout());
 
 
 // 图像
 export class ImageLayout extends LayoutNode<Image> {
-  constructor () {
-    super(TAGS.IMAGE)
-  }
+  tag = TAGS.IMAGE;
 
   public render (node: Image): string {
     let sb = new StringBuilder();
@@ -124,14 +115,12 @@ export class ImageLayout extends LayoutNode<Image> {
     return sb.str();
   }
 }
-kBasicWXMLLayout.use(new ImageLayout)
+kBasicWXMLLayout.registerLayoutNode(new ImageLayout());
 
 
 // 按钮
 export class ButtonLayout extends LayoutNode<Button> {
-  constructor () {
-    super(TAGS.BUTTON)
-  }
+  tag = TAGS.BUTTON;
 
   public render (node: Button): string {
     let sb = new StringBuilder();
@@ -145,13 +134,11 @@ export class ButtonLayout extends LayoutNode<Button> {
     return sb.str();
   }
 }
-kBasicWXMLLayout.use(new ButtonLayout)
+kBasicWXMLLayout.registerLayoutNode(new ButtonLayout);
 
 // 文字
 export class TextLayout extends LayoutNode<Text> {
-  constructor () {
-    super(TAGS.TEXT)
-  }
+  tag = TAGS.TEXT;
 
   public render (node: Text): string {
     let sb = new StringBuilder();
@@ -162,6 +149,6 @@ export class TextLayout extends LayoutNode<Text> {
     return sb.str();
   }
 }
-kBasicWXMLLayout.use(new TextLayout)
+kBasicWXMLLayout.registerLayoutNode(new TextLayout);
 
 export const BasicWXMLLayout = kBasicWXMLLayout;

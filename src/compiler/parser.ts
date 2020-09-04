@@ -1,5 +1,5 @@
 import Lexer, { TokenKind, Token } from './lexer'
-import { AST } from './ast'
+ import { AST } from './ast'
 
 let suspendTokens: Array<Token> = []
 

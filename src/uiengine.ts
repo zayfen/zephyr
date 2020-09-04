@@ -1,79 +1,47 @@
-import { Node, Layout, Theme } from './core/prototype';
-import { createElementFromHTML } from './utils/dom-utils';
 
-export class UIEngine {
-  private root: Node = null;
-  private layout: Layout = null;
-  private theme: Theme = null;
-  private observer: MutationObserver = null;
+import { VNode } from './core/prototype'
+import { LayoutManager } from './core/layout-manager'
+import { ThemeManager } from './core/theme-manager'
+import { ComponentAssets } from './core/component-assets'
+import { Parser } from './compiler/parser'
+import { AST } from './compiler/ast'
+import { isReservedTag } from './utils/node-utils'
 
-  private mutationCallback = function (mutations: MutationRecord[], observer: MutationObserver) {
-    mutations.forEach(mutation => {
-      console.log('[UIEngine]: mutation: ', mutation)
-      if (mutation.addedNodes.length > 0) { // 增加了节点, 此时我们认为挂载成功,可以调用onMounted回调函数
-        this.onMounted()
-      }
-    })
-  }
+export class Zephyr {
+  private root: VNode = null
+  private assets: ComponentAssets = null
+  private layout: string = ''
+  private theme: string = ''
 
-  constructor (node: Node, layout?: Layout, theme?: Theme) {
+  constructor (node: VNode, layoutName: string = '', themeName: string = '') {
     this.root = node;
-    if (layout) {
-      this.layout = layout;
-    }
-    if (theme) {
-      this.theme = theme;
-    }
-    if (!this.observer) {
-      this.observer = new MutationObserver(this.mutationCallback.bind(this))
-    }
+    this.layout = layoutName
+    this.theme = themeName
   }
 
+  public setComponentAssets (assets: ComponentAssets) {
+    this.assets = assets
+  }
 
-  useLayout(layout: Layout): UIEngine {
+  public useLayout(layout: string): Zephyr {
     this.layout = layout;
     return this;
   }
 
-  useTheme(theme: Theme): UIEngine {
+  public useTheme(theme: string): Zephyr {
     this.theme = theme;
     return this;
   }
 
-  injectLayoutTheme (node: Node, layout: Layout, theme: Theme) {
-    if (!node) {
-      throw new Error('node is null')
-    }
-
-    if (!layout && !theme) {
-      throw new Error('layout and theme are null')
-    }
-
-    // step 1: inject theme and layout to Node
-    let queue: Array<Node> = [];
-    queue.push(node);
-    while (queue.length > 0) {
-      let currentNode = queue.shift();
-      if (currentNode?.children && currentNode.children.length > 0) {
-        currentNode.children.forEach(node => queue.push(node));
-      }
-      if (theme) {
-        theme.injectThemeNode(currentNode);
-      }
-
-      if (layout) {
-        layout.injectLayoutNode(currentNode);
-      }
-    }
-
-  }
-
-  render<T extends Node>(root?: T) {
+  /**
+   * 渲染virtual node tree
+   */
+  public render<T extends VNode>(root?: T) {
     if (root) {
       this.root = root;
     }
 
-    if (this.layout === null || this.theme === null) {
+    if (this.layout === '' || this.theme === '') {
       throw new Error('Please Set layout or theme');
     }
 
@@ -81,79 +49,81 @@ export class UIEngine {
       return '';
     }
 
+    const layoutManager: LayoutManager = this.assets.findLayoutManager(this.layout)
+    const themeManager: ThemeManager = this.assets.findThemeManager(this.theme)
+
     // step 1: inject theme and layout to Node
-    this.injectLayoutTheme(this.root, this.layout, this.theme)
+    let queue: Array<VNode> = [];
+    queue.push(this.root);
+    while (queue.length > 0) {
+      let currentNode = queue.shift();
+      if (currentNode?.children && currentNode.children.length > 0) {
+        currentNode.children.forEach(node => queue.push(node));
+      }
+      themeManager.injectThemeNode(currentNode);
+      layoutManager.injectLayoutNode(currentNode);
+    }
 
     // step2: render root
-    let dom = this.root.layoutNode.render(this.root);
+    // let dom = this.root.layoutNode.render(this.root);
+    let dom = this.root.render()
     return dom;
   }
 
-  setRootNode (node: Node): UIEngine {
-    this.root = node
-    return this
+  // render 规范化之后的AST, 也就是增加了$vnode字段的AST
+  public renderAST (ast: AST): string {
+    let vnodeRoot = ast.$vnode
+
+    let queue = []
+    queue.push(ast)
+    while (queue.length > 0) {
+      let front = queue.shift()
+      if (front.$parent) {
+        front.$parent.push(front.$vnode)
+      }
+
+      if (front.children && front.children.length > 0) {
+        front.children.forEach(child => queue.push(child))
+      }
+    }
+
+    this.render(vnodeRoot)
   }
 
-  /**
-   * 挂载k
-   * @param target 挂载的目标元素(dom id或者dom元素)
-   */
-  mount (target: string | Element, node?: Node) {
-    let _target: Element = null
-    if (typeof target === 'string') { // is dom id
-      _target = document.getElementById(target[0] === '#' ? target.substr(1) : target)
-    } else if (target instanceof Element) {
-      _target = target
-    } else {
-      throw new Error('target is wrong')
+
+  private createVNodeInstance (ast: AST): VNode {
+    if (isReservedTag(ast.tag) || ast.isText) {
+      return null
     }
 
-    if (node) {
-      this.setRootNode(node)
-    }
-    
-    // remove _target children
-    while (_target.firstChild) {
-      _target.removeChild(_target.lastChild)
-    }
-    
-    // 用MutationObserver监听挂载是否完成
-    // 如果挂载完成,就对树进行后序遍历,依次调用onMounted方法
-    this.observer.observe(_target, { childList: true, subtree: false })
-
-    _target.appendChild(createElementFromHTML(this.render(this.root)))
+    const VNodeCtor = this.assets.findVNodeByTag(ast.tag)
+    return new VNodeCtor
   }
 
-  /**
-   * 挂载回调函数
-   * 后序遍历,依次调用组件的onMounted方法
-   */
-  onMounted () {
-    let stack: Node[] = []
-    // push root, push right, push left, pop left and loop
-    stack.push(this.root)
+  public renderTemplate (template: string): string {
+    const parser = new Parser(template)
+    const ast = parser.parse()
 
-    let visitedNodesCache = Object.create(null)
-
-    function allChildrenVisited (node: Node) {
-      return node.children.reduce((prevVal: boolean, child: Node) => prevVal && visitedNodesCache[child.id], true)
-    }
-
+    // dfs create vnode by ast
+    let stack: AST[] = []
+    stack.push(ast)
     while (stack.length > 0) {
-      let top = stack[stack.length-1]
-      if (allChildrenVisited(top) || (!top.children || top.children.length <= 0)) {
-        top.onMounted()
-        stack.pop()
-        visitedNodesCache[top.id] = true
-        continue
-      }
+      // pop top
+      let top = stack.pop()
 
+      // create VNode instance
+      top.$vnode = this.createVNodeInstance(top)
+
+      // push children of top to stack
       if (top.children && top.children.length > 0) {
-        top.children.forEach(child => stack.push(child))
+        top.children.forEach(child => {
+          child.$parent = top.$vnode
+          stack.push(child)
+        })
       }
-
     }
 
-    visitedNodesCache = null // release memory
+    return this.renderAST(ast)
   }
+
 }

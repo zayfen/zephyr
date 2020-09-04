@@ -1,4 +1,4 @@
-
+import { VNode } from '../core/prototype'
 
 interface Node {
   tag: string,
@@ -7,7 +7,9 @@ interface Node {
   comment?: string,              // comment
   children: Array<Node>,          // children nodes
   isText?: boolean,
-  isComment?: boolean
+  isComment?: boolean,
+  $vnode?: VNode,
+  $parent?: VNode
 }
 
 export type AST = Node
