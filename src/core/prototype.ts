@@ -21,18 +21,20 @@ export interface IVNode {
   layoutNode: LayoutNode<IVNode>,
   layout: LayoutManager,
   theme: ThemeManager,
-  append(child: IVNode): this,
-  appendTo(parent: IVNode): this,
-  addAttr(key: string, value: any): this,
-  addStyle(key: string, value: string | number): this,
-  addStyles(styleObject: { [key: string]: string | number }): this,
-  addCustomClass(cls: string): this,
-  addClass(cls: string): this,
-  attr(key: string, elseDefault?: any): any,
-  addWhiteListAttr(key: string): this,
-  render (layout?: LayoutManager, theme?: ThemeManager): string
+  append (child: IVNode): this,
+  appendTo (parent: IVNode): this,
+  addAttr (key: string, value: any): this,
+  addStyle (key: string, value: string | number): this,
+  addStyles (styleObject: { [key: string]: string | number }): this,
+  addCustomClass (cls: string): this,
+  addClass (cls: string): this,
+  attr (key: string, elseDefault?: any): any,
+  addWhiteListAttr (key: string): this,
+  render (layout?: LayoutManager, theme?: ThemeManager): string,
+  update (): void,
+  onMounted (): void,
+  onUpdate (): void
 }
-
 
 export abstract class VNode implements IVNode {
   attrWhiteList?: string[];
@@ -58,6 +60,18 @@ export abstract class VNode implements IVNode {
     this.classList = [];
     this.children = [];
     this.tag = tag
+  }
+
+  update(): void {
+    this.onUpdate()
+  }
+
+  onMounted(): void {
+    throw new Error("onMounted Method not implemented." + `(${this.tag} :: ${this.id})`);
+  }
+
+  onUpdate(): void {
+    throw new Error("onUpdate Method not implemented." + `(${this.tag} :: ${this.id})`);
   }
 
   append (child: IVNode): this {
@@ -141,8 +155,27 @@ export type TSizeTranslatorHolder = {
 // 布局Node的原型接口
 export abstract class LayoutNode<T extends IVNode> {
   tag: TAG_TYPE = TAGS.NONE;
-  tabWidth: number = 2;
+  private tabWidth: number = 2;
   sizeTranslatorHolder?: TSizeTranslatorHolder;
+
+  constructor (tag?: TAG_TYPE) {
+    if (tag) {
+      this.tag = tag
+    }
+  }
+
+  public hasSizeTranslator (): boolean {
+    return !!this.sizeTranslatorHolder.translator
+  }
+
+  public sizeTranslator (): SizeTranslator {
+    return this.sizeTranslatorHolder.translator
+  }
+
+  public setTranslatorHolder (translatorHolder: TSizeTranslatorHolder) {
+    this.sizeTranslatorHolder = translatorHolder
+  }
+
   abstract render(node: T): string;
 }
 
@@ -150,6 +183,13 @@ export abstract class LayoutNode<T extends IVNode> {
 // 主题Node的原型接口
 export abstract class ThemeNode<T extends IVNode> {
   tag: TAG_TYPE = TAGS.NONE;
+
+  constructor (tag?: TAG_TYPE) {
+    if (tag) {
+      this.tag = tag
+    }
+  }
+
   abstract inject(node: T): T;
 }
 

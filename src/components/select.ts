@@ -5,9 +5,9 @@ import { ThemeNode } from '../core/prototype'
 import { ComponentAssets } from '../core/component-assets'
 
 
-const TAG = 'button'
+const TAG = 'select'
 
-class Button extends VNode {
+class Select extends VNode {
   constructor () {
     super(TAG)
   }
@@ -15,42 +15,42 @@ class Button extends VNode {
 }
 
 
-class ButtonHTML extends LayoutNode<Button> {
+class SelectHTML extends LayoutNode<Select> {
 
   constructor () {
     super(TAG)
   }
 
-  render(node: Button): string {
+  render(node: Select): string {
     const children = node.children || []
     const childrenRendered = children.map(child => child.render()).join('\n')
 
-    return `<button>${childrenRendered} </button>`
+    return `<select>${childrenRendered} </select>`
   }
 }
 
 
-class ButtonWXML extends LayoutNode<Button> {
+class SelectWXML extends LayoutNode<Select> {
 
   constructor () {
     super(TAG)
   }
 
-  render(node: Button): string {
+  render(node: Select): string {
     const children = node.children || []
     const childrenRendered = children.map(child => child.render()).join('\n')
-    return `<button>${childrenRendered} </button>`
+    return `<view>${childrenRendered} </view>`
   }
 
 }
 
-class ButtonTheme extends ThemeNode<Button> {
+class SelectTheme extends ThemeNode<Select> {
 
   constructor () {
     super(TAG)
   }
 
-  inject(node: Button): Button {
+  inject(node: Select): Select {
     const themeClasses = ['zephyr-component', `zephyr-${TAG}`]
     themeClasses.forEach(cls => node.addCustomClass(cls))
     return node
@@ -58,10 +58,10 @@ class ButtonTheme extends ThemeNode<Button> {
 }
 
 export function install (assets: ComponentAssets): void {
-  assets.defineVNode(TAG, Button)
-  assets.defineLayoutNode('html', new ButtonHTML)
-  assets.defineLayoutNode('wxml', new ButtonWXML)
-  assets.defineThemeNode('zephyr', new ButtonTheme)
+  assets.defineVNode(TAG, Select)
+  assets.defineLayoutNode('html', new SelectHTML)
+  assets.defineLayoutNode('wxml', new SelectWXML)
+  assets.defineThemeNode('zephyr', new SelectTheme)
 }
 
   

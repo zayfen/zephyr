@@ -27,7 +27,7 @@ export class LayoutManager {
 
   public registerLayoutNode <T extends IVNode> (node: LayoutNode<T>) {
     let foundIndex = this.duplicatedLayoutNode(node)
-    node.sizeTranslatorHolder = this.sizeTranslatorHolder
+    node.setTranslatorHolder(this.sizeTranslatorHolder)
 
     if (foundIndex === -1) {
       this.layoutNodeList.push(node)

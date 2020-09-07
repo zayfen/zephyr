@@ -5,9 +5,9 @@ import { ThemeNode } from '../core/prototype'
 import { ComponentAssets } from '../core/component-assets'
 
 
-const TAG = 'button'
+const TAG = 'td'
 
-class Button extends VNode {
+class Td extends VNode {
   constructor () {
     super(TAG)
   }
@@ -15,42 +15,42 @@ class Button extends VNode {
 }
 
 
-class ButtonHTML extends LayoutNode<Button> {
+class TdHTML extends LayoutNode<Td> {
 
   constructor () {
     super(TAG)
   }
 
-  render(node: Button): string {
+  render(node: Td): string {
     const children = node.children || []
     const childrenRendered = children.map(child => child.render()).join('\n')
 
-    return `<button>${childrenRendered} </button>`
+    return `<td>${childrenRendered} </td>`
   }
 }
 
 
-class ButtonWXML extends LayoutNode<Button> {
+class TdWXML extends LayoutNode<Td> {
 
   constructor () {
     super(TAG)
   }
 
-  render(node: Button): string {
+  render(node: Td): string {
     const children = node.children || []
     const childrenRendered = children.map(child => child.render()).join('\n')
-    return `<button>${childrenRendered} </button>`
+    return `<view>${childrenRendered} </view>`
   }
 
 }
 
-class ButtonTheme extends ThemeNode<Button> {
+class TdTheme extends ThemeNode<Td> {
 
   constructor () {
     super(TAG)
   }
 
-  inject(node: Button): Button {
+  inject(node: Td): Td {
     const themeClasses = ['zephyr-component', `zephyr-${TAG}`]
     themeClasses.forEach(cls => node.addCustomClass(cls))
     return node
@@ -58,10 +58,10 @@ class ButtonTheme extends ThemeNode<Button> {
 }
 
 export function install (assets: ComponentAssets): void {
-  assets.defineVNode(TAG, Button)
-  assets.defineLayoutNode('html', new ButtonHTML)
-  assets.defineLayoutNode('wxml', new ButtonWXML)
-  assets.defineThemeNode('zephyr', new ButtonTheme)
+  assets.defineVNode(TAG, Td)
+  assets.defineLayoutNode('html', new TdHTML)
+  assets.defineLayoutNode('wxml', new TdWXML)
+  assets.defineThemeNode('zephyr', new TdTheme)
 }
 
   

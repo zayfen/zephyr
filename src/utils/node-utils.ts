@@ -47,14 +47,14 @@ export function resolveStyle (node: IVNode): string {
     let styleValueArr = splitCssPropertyValue(<string> styleValue);
     // translate layout size
     let isVariable: boolean = curr.slice(0, 2) === '--' // css var, don't translate, e.g. :root { --scale-factor: 1 }
-    if (node.layoutNode.sizeTranslatorHolder.translator && !isVariable) {
-      let translator = node.layoutNode.sizeTranslatorHolder.translator;
+    if (node.layoutNode.hasSizeTranslator() && !isVariable) {
+      let translator = node.layoutNode.sizeTranslator()
       styleValue = styleValueArr.map((value: string | number) => {
         if (typeof value === 'number') {
-          return translator.translate(value) + translator.unit;
+          return translator ? translator.translate(value) + translator.unit : value
         }
-        return value;
-      }).join(' ');
+        return value
+      }).join(' ')
     }
 
     return prev + camelCase2kebabCase(curr) + ':' + styleValue + ';';

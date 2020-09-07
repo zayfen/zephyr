@@ -5,9 +5,9 @@ import { ThemeNode } from '../core/prototype'
 import { ComponentAssets } from '../core/component-assets'
 
 
-const TAG = 'button'
+const TAG = 'input'
 
-class Button extends VNode {
+class Input extends VNode {
   constructor () {
     super(TAG)
   }
@@ -15,42 +15,42 @@ class Button extends VNode {
 }
 
 
-class ButtonHTML extends LayoutNode<Button> {
+class InputHTML extends LayoutNode<Input> {
 
   constructor () {
     super(TAG)
   }
 
-  render(node: Button): string {
+  render(node: Input): string {
     const children = node.children || []
     const childrenRendered = children.map(child => child.render()).join('\n')
 
-    return `<button>${childrenRendered} </button>`
+    return `<input>${childrenRendered} </input>`
   }
 }
 
 
-class ButtonWXML extends LayoutNode<Button> {
+class InputWXML extends LayoutNode<Input> {
 
   constructor () {
     super(TAG)
   }
 
-  render(node: Button): string {
+  render(node: Input): string {
     const children = node.children || []
     const childrenRendered = children.map(child => child.render()).join('\n')
-    return `<button>${childrenRendered} </button>`
+    return `<input>${childrenRendered} </input>`
   }
 
 }
 
-class ButtonTheme extends ThemeNode<Button> {
+class InputTheme extends ThemeNode<Input> {
 
   constructor () {
     super(TAG)
   }
 
-  inject(node: Button): Button {
+  inject(node: Input): Input {
     const themeClasses = ['zephyr-component', `zephyr-${TAG}`]
     themeClasses.forEach(cls => node.addCustomClass(cls))
     return node
@@ -58,10 +58,10 @@ class ButtonTheme extends ThemeNode<Button> {
 }
 
 export function install (assets: ComponentAssets): void {
-  assets.defineVNode(TAG, Button)
-  assets.defineLayoutNode('html', new ButtonHTML)
-  assets.defineLayoutNode('wxml', new ButtonWXML)
-  assets.defineThemeNode('zephyr', new ButtonTheme)
+  assets.defineVNode(TAG, Input)
+  assets.defineLayoutNode('html', new InputHTML)
+  assets.defineLayoutNode('wxml', new InputWXML)
+  assets.defineThemeNode('zephyr', new InputTheme)
 }
 
   

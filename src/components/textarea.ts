@@ -5,9 +5,9 @@ import { ThemeNode } from '../core/prototype'
 import { ComponentAssets } from '../core/component-assets'
 
 
-const TAG = 'button'
+const TAG = 'textarea'
 
-class Button extends VNode {
+class Textarea extends VNode {
   constructor () {
     super(TAG)
   }
@@ -15,42 +15,42 @@ class Button extends VNode {
 }
 
 
-class ButtonHTML extends LayoutNode<Button> {
+class TextareaHTML extends LayoutNode<Textarea> {
 
   constructor () {
     super(TAG)
   }
 
-  render(node: Button): string {
+  render(node: Textarea): string {
     const children = node.children || []
     const childrenRendered = children.map(child => child.render()).join('\n')
 
-    return `<button>${childrenRendered} </button>`
+    return `<textarea>${childrenRendered} </textarea>`
   }
 }
 
 
-class ButtonWXML extends LayoutNode<Button> {
+class TextareaWXML extends LayoutNode<Textarea> {
 
   constructor () {
     super(TAG)
   }
 
-  render(node: Button): string {
+  render(node: Textarea): string {
     const children = node.children || []
     const childrenRendered = children.map(child => child.render()).join('\n')
-    return `<button>${childrenRendered} </button>`
+    return `<textarea>${childrenRendered} </textarea>`
   }
 
 }
 
-class ButtonTheme extends ThemeNode<Button> {
+class TextareaTheme extends ThemeNode<Textarea> {
 
   constructor () {
     super(TAG)
   }
 
-  inject(node: Button): Button {
+  inject(node: Textarea): Textarea {
     const themeClasses = ['zephyr-component', `zephyr-${TAG}`]
     themeClasses.forEach(cls => node.addCustomClass(cls))
     return node
@@ -58,10 +58,10 @@ class ButtonTheme extends ThemeNode<Button> {
 }
 
 export function install (assets: ComponentAssets): void {
-  assets.defineVNode(TAG, Button)
-  assets.defineLayoutNode('html', new ButtonHTML)
-  assets.defineLayoutNode('wxml', new ButtonWXML)
-  assets.defineThemeNode('zephyr', new ButtonTheme)
+  assets.defineVNode(TAG, Textarea)
+  assets.defineLayoutNode('html', new TextareaHTML)
+  assets.defineLayoutNode('wxml', new TextareaWXML)
+  assets.defineThemeNode('zephyr', new TextareaTheme)
 }
 
   

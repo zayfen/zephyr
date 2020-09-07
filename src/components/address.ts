@@ -5,9 +5,9 @@ import { ThemeNode } from '../core/prototype'
 import { ComponentAssets } from '../core/component-assets'
 
 
-const TAG = 'button'
+const TAG = 'address'
 
-class Button extends VNode {
+class Address extends VNode {
   constructor () {
     super(TAG)
   }
@@ -15,42 +15,42 @@ class Button extends VNode {
 }
 
 
-class ButtonHTML extends LayoutNode<Button> {
+class AddressHTML extends LayoutNode<Address> {
 
   constructor () {
     super(TAG)
   }
 
-  render(node: Button): string {
+  render(node: Address): string {
     const children = node.children || []
     const childrenRendered = children.map(child => child.render()).join('\n')
 
-    return `<button>${childrenRendered} </button>`
+    return `<address>${childrenRendered} </address>`
   }
 }
 
 
-class ButtonWXML extends LayoutNode<Button> {
+class AddressWXML extends LayoutNode<Address> {
 
   constructor () {
     super(TAG)
   }
 
-  render(node: Button): string {
+  render(node: Address): string {
     const children = node.children || []
     const childrenRendered = children.map(child => child.render()).join('\n')
-    return `<button>${childrenRendered} </button>`
+    return `<view>${childrenRendered} </view>`
   }
 
 }
 
-class ButtonTheme extends ThemeNode<Button> {
+class AddressTheme extends ThemeNode<Address> {
 
   constructor () {
     super(TAG)
   }
 
-  inject(node: Button): Button {
+  inject(node: Address): Address {
     const themeClasses = ['zephyr-component', `zephyr-${TAG}`]
     themeClasses.forEach(cls => node.addCustomClass(cls))
     return node
@@ -58,10 +58,10 @@ class ButtonTheme extends ThemeNode<Button> {
 }
 
 export function install (assets: ComponentAssets): void {
-  assets.defineVNode(TAG, Button)
-  assets.defineLayoutNode('html', new ButtonHTML)
-  assets.defineLayoutNode('wxml', new ButtonWXML)
-  assets.defineThemeNode('zephyr', new ButtonTheme)
+  assets.defineVNode(TAG, Address)
+  assets.defineLayoutNode('html', new AddressHTML)
+  assets.defineLayoutNode('wxml', new AddressWXML)
+  assets.defineThemeNode('zephyr', new AddressTheme)
 }
 
   

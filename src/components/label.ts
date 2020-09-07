@@ -5,9 +5,9 @@ import { ThemeNode } from '../core/prototype'
 import { ComponentAssets } from '../core/component-assets'
 
 
-const TAG = 'button'
+const TAG = 'label'
 
-class Button extends VNode {
+class Label extends VNode {
   constructor () {
     super(TAG)
   }
@@ -15,42 +15,42 @@ class Button extends VNode {
 }
 
 
-class ButtonHTML extends LayoutNode<Button> {
+class LabelHTML extends LayoutNode<Label> {
 
   constructor () {
     super(TAG)
   }
 
-  render(node: Button): string {
+  render(node: Label): string {
     const children = node.children || []
     const childrenRendered = children.map(child => child.render()).join('\n')
 
-    return `<button>${childrenRendered} </button>`
+    return `<label>${childrenRendered} </label>`
   }
 }
 
 
-class ButtonWXML extends LayoutNode<Button> {
+class LabelWXML extends LayoutNode<Label> {
 
   constructor () {
     super(TAG)
   }
 
-  render(node: Button): string {
+  render(node: Label): string {
     const children = node.children || []
     const childrenRendered = children.map(child => child.render()).join('\n')
-    return `<button>${childrenRendered} </button>`
+    return `<label>${childrenRendered} </label>`
   }
 
 }
 
-class ButtonTheme extends ThemeNode<Button> {
+class LabelTheme extends ThemeNode<Label> {
 
   constructor () {
     super(TAG)
   }
 
-  inject(node: Button): Button {
+  inject(node: Label): Label {
     const themeClasses = ['zephyr-component', `zephyr-${TAG}`]
     themeClasses.forEach(cls => node.addCustomClass(cls))
     return node
@@ -58,10 +58,10 @@ class ButtonTheme extends ThemeNode<Button> {
 }
 
 export function install (assets: ComponentAssets): void {
-  assets.defineVNode(TAG, Button)
-  assets.defineLayoutNode('html', new ButtonHTML)
-  assets.defineLayoutNode('wxml', new ButtonWXML)
-  assets.defineThemeNode('zephyr', new ButtonTheme)
+  assets.defineVNode(TAG, Label)
+  assets.defineLayoutNode('html', new LabelHTML)
+  assets.defineLayoutNode('wxml', new LabelWXML)
+  assets.defineThemeNode('zephyr', new LabelTheme)
 }
 
   

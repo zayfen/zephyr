@@ -5,9 +5,9 @@ import { ThemeNode } from '../core/prototype'
 import { ComponentAssets } from '../core/component-assets'
 
 
-const TAG = 'button'
+const TAG = 'table'
 
-class Button extends VNode {
+class Table extends VNode {
   constructor () {
     super(TAG)
   }
@@ -15,42 +15,42 @@ class Button extends VNode {
 }
 
 
-class ButtonHTML extends LayoutNode<Button> {
+class TableHTML extends LayoutNode<Table> {
 
   constructor () {
     super(TAG)
   }
 
-  render(node: Button): string {
+  render(node: Table): string {
     const children = node.children || []
     const childrenRendered = children.map(child => child.render()).join('\n')
 
-    return `<button>${childrenRendered} </button>`
+    return `<table>${childrenRendered} </table>`
   }
 }
 
 
-class ButtonWXML extends LayoutNode<Button> {
+class TableWXML extends LayoutNode<Table> {
 
   constructor () {
     super(TAG)
   }
 
-  render(node: Button): string {
+  render(node: Table): string {
     const children = node.children || []
     const childrenRendered = children.map(child => child.render()).join('\n')
-    return `<button>${childrenRendered} </button>`
+    return `<view>${childrenRendered} </view>`
   }
 
 }
 
-class ButtonTheme extends ThemeNode<Button> {
+class TableTheme extends ThemeNode<Table> {
 
   constructor () {
     super(TAG)
   }
 
-  inject(node: Button): Button {
+  inject(node: Table): Table {
     const themeClasses = ['zephyr-component', `zephyr-${TAG}`]
     themeClasses.forEach(cls => node.addCustomClass(cls))
     return node
@@ -58,10 +58,10 @@ class ButtonTheme extends ThemeNode<Button> {
 }
 
 export function install (assets: ComponentAssets): void {
-  assets.defineVNode(TAG, Button)
-  assets.defineLayoutNode('html', new ButtonHTML)
-  assets.defineLayoutNode('wxml', new ButtonWXML)
-  assets.defineThemeNode('zephyr', new ButtonTheme)
+  assets.defineVNode(TAG, Table)
+  assets.defineLayoutNode('html', new TableHTML)
+  assets.defineLayoutNode('wxml', new TableWXML)
+  assets.defineThemeNode('zephyr', new TableTheme)
 }
 
   

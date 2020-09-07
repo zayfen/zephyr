@@ -5,9 +5,9 @@ import { ThemeNode } from '../core/prototype'
 import { ComponentAssets } from '../core/component-assets'
 
 
-const TAG = 'button'
+const TAG = 'canvas'
 
-class Button extends VNode {
+class Canvas extends VNode {
   constructor () {
     super(TAG)
   }
@@ -15,42 +15,42 @@ class Button extends VNode {
 }
 
 
-class ButtonHTML extends LayoutNode<Button> {
+class CanvasHTML extends LayoutNode<Canvas> {
 
   constructor () {
     super(TAG)
   }
 
-  render(node: Button): string {
+  render(node: Canvas): string {
     const children = node.children || []
     const childrenRendered = children.map(child => child.render()).join('\n')
 
-    return `<button>${childrenRendered} </button>`
+    return `<canvas>${childrenRendered} </canvas>`
   }
 }
 
 
-class ButtonWXML extends LayoutNode<Button> {
+class CanvasWXML extends LayoutNode<Canvas> {
 
   constructor () {
     super(TAG)
   }
 
-  render(node: Button): string {
+  render(node: Canvas): string {
     const children = node.children || []
     const childrenRendered = children.map(child => child.render()).join('\n')
-    return `<button>${childrenRendered} </button>`
+    return `<canvas>${childrenRendered} </canvas>`
   }
 
 }
 
-class ButtonTheme extends ThemeNode<Button> {
+class CanvasTheme extends ThemeNode<Canvas> {
 
   constructor () {
     super(TAG)
   }
 
-  inject(node: Button): Button {
+  inject(node: Canvas): Canvas {
     const themeClasses = ['zephyr-component', `zephyr-${TAG}`]
     themeClasses.forEach(cls => node.addCustomClass(cls))
     return node
@@ -58,10 +58,10 @@ class ButtonTheme extends ThemeNode<Button> {
 }
 
 export function install (assets: ComponentAssets): void {
-  assets.defineVNode(TAG, Button)
-  assets.defineLayoutNode('html', new ButtonHTML)
-  assets.defineLayoutNode('wxml', new ButtonWXML)
-  assets.defineThemeNode('zephyr', new ButtonTheme)
+  assets.defineVNode(TAG, Canvas)
+  assets.defineLayoutNode('html', new CanvasHTML)
+  assets.defineLayoutNode('wxml', new CanvasWXML)
+  assets.defineThemeNode('zephyr', new CanvasTheme)
 }
 
   

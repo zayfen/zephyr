@@ -5,9 +5,9 @@ import { ThemeNode } from '../core/prototype'
 import { ComponentAssets } from '../core/component-assets'
 
 
-const TAG = 'button'
+const TAG = 'audio'
 
-class Button extends VNode {
+class Audio extends VNode {
   constructor () {
     super(TAG)
   }
@@ -15,42 +15,42 @@ class Button extends VNode {
 }
 
 
-class ButtonHTML extends LayoutNode<Button> {
+class AudioHTML extends LayoutNode<Audio> {
 
   constructor () {
     super(TAG)
   }
 
-  render(node: Button): string {
+  render(node: Audio): string {
     const children = node.children || []
     const childrenRendered = children.map(child => child.render()).join('\n')
 
-    return `<button>${childrenRendered} </button>`
+    return `<audio>${childrenRendered} </audio>`
   }
 }
 
 
-class ButtonWXML extends LayoutNode<Button> {
+class AudioWXML extends LayoutNode<Audio> {
 
   constructor () {
     super(TAG)
   }
 
-  render(node: Button): string {
+  render(node: Audio): string {
     const children = node.children || []
     const childrenRendered = children.map(child => child.render()).join('\n')
-    return `<button>${childrenRendered} </button>`
+    return `<audio>${childrenRendered} </audio>`
   }
 
 }
 
-class ButtonTheme extends ThemeNode<Button> {
+class AudioTheme extends ThemeNode<Audio> {
 
   constructor () {
     super(TAG)
   }
 
-  inject(node: Button): Button {
+  inject(node: Audio): Audio {
     const themeClasses = ['zephyr-component', `zephyr-${TAG}`]
     themeClasses.forEach(cls => node.addCustomClass(cls))
     return node
@@ -58,10 +58,10 @@ class ButtonTheme extends ThemeNode<Button> {
 }
 
 export function install (assets: ComponentAssets): void {
-  assets.defineVNode(TAG, Button)
-  assets.defineLayoutNode('html', new ButtonHTML)
-  assets.defineLayoutNode('wxml', new ButtonWXML)
-  assets.defineThemeNode('zephyr', new ButtonTheme)
+  assets.defineVNode(TAG, Audio)
+  assets.defineLayoutNode('html', new AudioHTML)
+  assets.defineLayoutNode('wxml', new AudioWXML)
+  assets.defineThemeNode('zephyr', new AudioTheme)
 }
 
   
