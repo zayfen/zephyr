@@ -3,6 +3,11 @@ import { VNode } from '../core/prototype'
 import { LayoutNode } from '../core/prototype'
 import { ThemeNode } from '../core/prototype'
 import { ComponentAssets } from '../core/component-assets'
+import {
+  resolveStyle,
+  resolveClassList,
+  resolveAttributes
+} from '../utils/node-utils'
 
 
 const TAG = 'img'
@@ -22,10 +27,15 @@ class ImgHTML extends LayoutNode<Img> {
   }
 
   render(node: Img): string {
+    let id = node.getId()
+    let style = resolveStyle(node)
+    let cls = resolveClassList(node)
+    let attrs = resolveAttributes(node)
+
     const children = node.children || []
     const childrenRendered = children.map(child => child.render()).join('\n')
 
-    return `<img>${childrenRendered} </img>`
+    return `<img id="${id}" style="${style}" class="${cls}" ${attrs}>${childrenRendered}</img>`
   }
 }
 
@@ -37,9 +47,14 @@ class ImgWXML extends LayoutNode<Img> {
   }
 
   render(node: Img): string {
+    let id = node.getId()
+    let style = resolveStyle(node)
+    let cls = resolveClassList(node)
+    let attrs = resolveAttributes(node)
+
     const children = node.children || []
     const childrenRendered = children.map(child => child.render()).join('\n')
-    return `<image>${childrenRendered} </image>`
+    return `<image id="${id}" style="${style}" class="${cls}" ${attrs}>${childrenRendered}</image>`
   }
 
 }

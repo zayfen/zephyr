@@ -3,6 +3,11 @@ import { VNode } from '../core/prototype'
 import { LayoutNode } from '../core/prototype'
 import { ThemeNode } from '../core/prototype'
 import { ComponentAssets } from '../core/component-assets'
+import {
+  resolveStyle,
+  resolveClassList,
+  resolveAttributes
+} from '../utils/node-utils'
 
 
 const TAG = 'section'
@@ -22,10 +27,15 @@ class SectionHTML extends LayoutNode<Section> {
   }
 
   render(node: Section): string {
+    let id = node.getId()
+    let style = resolveStyle(node)
+    let cls = resolveClassList(node)
+    let attrs = resolveAttributes(node)
+
     const children = node.children || []
     const childrenRendered = children.map(child => child.render()).join('\n')
 
-    return `<section>${childrenRendered} </section>`
+    return `<section id="${id}" style="${style}" class="${cls}" ${attrs}>${childrenRendered}</section>`
   }
 }
 
@@ -37,9 +47,14 @@ class SectionWXML extends LayoutNode<Section> {
   }
 
   render(node: Section): string {
+    let id = node.getId()
+    let style = resolveStyle(node)
+    let cls = resolveClassList(node)
+    let attrs = resolveAttributes(node)
+
     const children = node.children || []
     const childrenRendered = children.map(child => child.render()).join('\n')
-    return `<view>${childrenRendered} </view>`
+    return `<view id="${id}" style="${style}" class="${cls}" ${attrs}>${childrenRendered}</view>`
   }
 
 }

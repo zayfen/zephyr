@@ -3,6 +3,11 @@ import { VNode } from '../core/prototype'
 import { LayoutNode } from '../core/prototype'
 import { ThemeNode } from '../core/prototype'
 import { ComponentAssets } from '../core/component-assets'
+import {
+  resolveStyle,
+  resolveClassList,
+  resolveAttributes
+} from '../utils/node-utils'
 
 
 const TAG = 'address'
@@ -22,10 +27,15 @@ class AddressHTML extends LayoutNode<Address> {
   }
 
   render(node: Address): string {
+    let id = node.getId()
+    let style = resolveStyle(node)
+    let cls = resolveClassList(node)
+    let attrs = resolveAttributes(node)
+
     const children = node.children || []
     const childrenRendered = children.map(child => child.render()).join('\n')
 
-    return `<address>${childrenRendered} </address>`
+    return `<address id="${id}" style="${style}" class="${cls}" ${attrs}>${childrenRendered}</address>`
   }
 }
 
@@ -37,9 +47,14 @@ class AddressWXML extends LayoutNode<Address> {
   }
 
   render(node: Address): string {
+    let id = node.getId()
+    let style = resolveStyle(node)
+    let cls = resolveClassList(node)
+    let attrs = resolveAttributes(node)
+
     const children = node.children || []
     const childrenRendered = children.map(child => child.render()).join('\n')
-    return `<view>${childrenRendered} </view>`
+    return `<view id="${id}" style="${style}" class="${cls}" ${attrs}>${childrenRendered}</view>`
   }
 
 }

@@ -42,27 +42,27 @@ class Iterator {
     this.maxLength = source.length
   }
 
-  public next (): string {
+  public next (): [string, string] {
     this._position += 1 // forward
 
     if (this._position >= this.maxLength) {
       this._done = true
-      return null;
+      return [null, null];
     }
 
-    return this.source[this._position]
+    let char0 = this.source[this._position]
+    let char1 = this._position + 1 >= this.maxLength ? null : this.source[this._position + 1]
+    return [char0, char1]
   }
 
   // just return future string, position not modified
   public lookforward (num: number): string {
-    // this._position now point to char1, so minus 1
-    let char0Position = this._position - 1
+    let char0Position = this._position
     return this.source.slice(char0Position, char0Position + num)
   }
 
   public peekTo (reg: RegExp): string {
-    // this.position-1是因为当前的_position指向的是char1,我们需要从char0开始截取
-    let char0Position = this._position - 1
+    let char0Position = this._position
     let sliceStr: string = this.source.slice(char0Position)
     let index = sliceStr.search(reg)
     return index === -1 ? sliceStr : sliceStr.slice(0, index)
@@ -74,7 +74,7 @@ class Iterator {
   **
   **/
   public earlyMatch (reg1: RegExp, reg2: RegExp): RegExp {
-    let char0Position = this._position - 1
+    let char0Position = this._position
     const sliceStr: string = this.source.slice(char0Position)
     const sourceLen: number = this.source.length
 
@@ -101,7 +101,6 @@ class Iterator {
     this._position = -1
     this._done = false
   }
-
 }
 
 
@@ -136,8 +135,9 @@ export default class Lexer  {
 
   constructor (source: string) {
     this.chars = new Iterator(source)
-    this.char0 = this.chars.next()
-    this.char1 = this.chars.next()
+    let nextChars = this.chars.next()
+    this.char0 = nextChars[0]
+    this.char1 = nextChars[1]
   }
 
   peekTo (leftReg: RegExp): string {
@@ -149,13 +149,14 @@ export default class Lexer  {
       this.shift()
       len -= 1
     }
-    console.log("peekTo char0: ", this.char0, "  ;char1: ", this.char1)
+    // console.log("peekTo char0: ", this.char0, "  ;char1: ", this.char1)
     return s
   }
 
   shift () {
-    this.char0 = this.char1
-    this.char1 = this.chars.next()
+    let chars = this.chars.next()
+    this.char0 = chars[0]
+    this.char1 = chars[1]
   }
 
   public get headChars () {
@@ -180,7 +181,7 @@ export default class Lexer  {
         this.shift()
         continue
       }
-      console.log("char0: ", char0, " ;char1: ", char1)
+      // console.log("char0: ", char0, " ;char1: ", char1)
 
       // now char0 is not whilte space character
 
@@ -261,7 +262,7 @@ export default class Lexer  {
     // now char0 is available dom character
     let [char0, char1] = this.headChars
 
-    while ((isAlpha(char0) || isNumber(char0) || char0 === '-') && char1 !== '>') {
+    while ((isAlpha(char0) || isNumber(char0) || char0 === '-') && char0 !== '>') {
       if (char0 === null) {
         throw new Error('parseTagBeginOpen Error: reach at source end but token not completed')
       }
@@ -470,7 +471,6 @@ export default class Lexer  {
       location: loc
     }
 
-    let [char0, char1] = this.headChars
     // now char0 == '<' char1 == '!'
     this.shift()
     // now char0 == '!', char1 == '-'
@@ -479,9 +479,13 @@ export default class Lexer  {
     this.shift()
     // now char0 == '-', char1 == 'x'
     this.shift()
+
     // now char0 point to begin of comment value
     let value = ''
-    while (!(char0 === '-' && char1 === '>')) {
+    let [char0, char1] = this.headChars
+    let forwardChars = this.lookforwad(3)
+
+    while (!(forwardChars[0] === '-' && forwardChars[1] === '-' && forwardChars[2] === '>')) {
       if (char0 === null) {
         throw new Error("Parse Comment Error: read end but token not completed")
       }
@@ -491,16 +495,20 @@ export default class Lexer  {
       this.shift()
       char0 = this.headChars[0]
       char1 = this.headChars[1]
+
+      forwardChars = this.lookforwad(3)
     }
 
-    //  now char0 == '-' char1 == '>'
+    //  now char0 == '-' char1 == '-'
+    this.shift()
+    // now char0 == '-' char1 == '>'
     this.shift()
     // now char0 == '>' char1 == 'x'
-    token.location.end = this.chars.position
-
     this.shift()
+
     // now char0 == 'x'
     token.value = value
+    token.location.end = this.chars.position
 
     return token
   }
@@ -523,7 +531,7 @@ export default class Lexer  {
     // find end postion </xxx>
     const reg = this.chars.earlyMatch(EndTagReg, BeginTagReg)
     let value = this.peekTo(reg)
-    console.log("parseText value: ", value)
+    // console.log("parseText value: ", value)
 
     token.location.end = this.chars.position
     token.value = value

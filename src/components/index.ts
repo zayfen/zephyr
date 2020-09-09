@@ -189,4 +189,8 @@
   allComponentInstallers.push(videoInstaller)
   
 
-export default allComponentInstallers
+  import { install as __text__Installer } from './__text__'
+  allComponentInstallers.push(__text__Installer)
+  
+  export default allComponentInstallers
+  

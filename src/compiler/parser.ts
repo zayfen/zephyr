@@ -60,7 +60,7 @@ export class Parser {
         // 匹配 <xxxx
       case TokenKind.TagBeginOpen: {
 
-        console.log("TagBeginOpen: ", token)
+        // console.log("TagBeginOpen: ", token)
 
         let node: AST = { tag: token.value as string, attrs: [], children: [] }
 
@@ -113,7 +113,7 @@ export class Parser {
 
       case TokenKind.Text: {
         let textNode: AST = {
-          tag: '',
+          tag: '__text__',
           attrs: [],
           children: [],
           text: token.value as string,

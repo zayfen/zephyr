@@ -2,13 +2,15 @@
 import { setStyle } from "../utils/node-utils"
 import { LayoutManager } from './layout-manager'
 import { ThemeManager } from './theme-manager'
-
+import { randomKey } from '../utils/misc-utils'
+import { Zephyr } from '../zephyr'
 
 export type TAG_TYPE = TAGS | string
 
 // interface of VNode
 export interface IVNode {
   tag: TAG_TYPE,
+  app: Zephyr,
   id: string,
   level: number,
   style: { [key: string]: number | string },
@@ -21,6 +23,10 @@ export interface IVNode {
   layoutNode: LayoutNode<IVNode>,
   layout: LayoutManager,
   theme: ThemeManager,
+  isText: boolean,
+  text?: string,
+  $el?: Element,
+  getId (): string,
   append (child: IVNode): this,
   appendTo (parent: IVNode): this,
   addAttr (key: string, value: any): this,
@@ -37,29 +43,41 @@ export interface IVNode {
 }
 
 export abstract class VNode implements IVNode {
-  attrWhiteList?: string[];
-  tag: TAG_TYPE = TAGS.NONE;
-  id: string = '';
-  level: number = 0;
-  style: { [key: string]: string | number } = {};
-  customClassList: string[] = [];
-  classList: string[] = [];
-  attrList: { [key: string]: any; } = {};
-  children: IVNode[] = [];
-  themeNode: ThemeNode<IVNode>;
-  layoutNode: LayoutNode<IVNode>;
-  layout: LayoutManager;
-  theme: ThemeManager;
+  attrWhiteList?: string[]
+  tag: TAG_TYPE = TAGS.NONE
+  app: Zephyr = null
+  id: string = ''
+  level: number = 0
+  style: { [key: string]: string | number } = {}
+  customClassList: string[] = []
+  classList: string[] = []
+  attrList: { [key: string]: any } = {}
+  children: VNode[] = []
+  themeNode: ThemeNode<IVNode>
+  layoutNode: LayoutNode<IVNode>
+  layout: LayoutManager
+  theme: ThemeManager
+  isText = false                // default is false
+  text = ''                     // default is not text, so value is empty string
+  $el = null
 
   constructor(tag?: TAG_TYPE) {
-    this.attrWhiteList = [];
-    this.id = '';
-    this.level = 0;
-    this.style = {};
-    this.customClassList = [];
-    this.classList = [];
-    this.children = [];
+    this.attrWhiteList = []
+    this.id = ''
+    this.level = 0
+    this.style = {}
+    this.customClassList = []
+    this.classList = []
+    this.children = []
     this.tag = tag
+  }
+
+  getId (): string {
+    if (this.id === '') {
+      this.id = this.tag ? this.tag + '-' + randomKey(8) : randomKey(12)
+    }
+
+    return this.id
   }
 
   update(): void {
@@ -67,65 +85,65 @@ export abstract class VNode implements IVNode {
   }
 
   onMounted(): void {
-    throw new Error("onMounted Method not implemented." + `(${this.tag} :: ${this.id})`);
+    throw new Error("onMounted Method not implemented." + `(${this.tag} :: ${this.id})`)
   }
 
   onUpdate(): void {
-    throw new Error("onUpdate Method not implemented." + `(${this.tag} :: ${this.id})`);
+    throw new Error("onUpdate Method not implemented." + `(${this.tag} :: ${this.id})`)
   }
 
-  append (child: IVNode): this {
-    this.children.push(child);
-    child.level = this.level + 1;
-    return this;
+  append (child: VNode): this {
+    this.children.push(child)
+    child.level = this.level + 1
+    return this
   }
 
   appendTo (node: IVNode): this {
-    node.children.push(this);
-    this.level = node.level + 1;
-    return this;
+    node.children.push(this)
+    this.level = node.level + 1
+    return this
   }
 
   addCustomClass (cls: string): this {
     if (this.customClassList.indexOf(cls.trim()) === -1) {
-      this.customClassList.push(cls);
+      this.customClassList.push(cls)
     }
-    return this;
+    return this
   }
 
   addClass (cls: string): this {
     if (this.classList.indexOf(cls.trim()) === -1) {
-      this.classList.push(cls);
+      this.classList.push(cls)
     }
-    return this;
+    return this
   }
 
   addAttr (key: string, value: any): this {
-    this.attrList[key] = value;
-    return this;
+    this.attrList[key] = value
+    return this
   }
 
   attr (key: string, elseDefault?: any): any {
-    return this.attrList[key] === void 0 ? elseDefault : this.attrList[key];
+    return this.attrList[key] === void 0 ? elseDefault : this.attrList[key]
   }
 
   addStyle (key: string, value: string | number): this {
-    setStyle(this, key, value);
-    return this;
+    setStyle(this, key, value)
+    return this
   }
 
   addStyles (styleObject: { [key: string]: string | number }): this {
 
     for (let key of Object.keys(styleObject)) {
-      this.addStyle(key, styleObject[key]);
+      this.addStyle(key, styleObject[key])
     }
 
-    return this;
+    return this
   }
 
   addWhiteListAttr (key: string): this {
-    this.attrWhiteList.push(key);
-    return this;
+    this.attrWhiteList.push(key)
+    return this
   }
 
   render (layout?: LayoutManager, theme?: ThemeManager): string {
@@ -140,10 +158,10 @@ export abstract class VNode implements IVNode {
 
 // 尺寸转换的接口
 export abstract class  SizeTranslator {
-  readonly unit: string;
-  abstract translate (size: number): string;
+  readonly unit: string
+  abstract translate (size: number): string
   constructor (unit: string) {
-    this.unit = unit;
+    this.unit = unit
   }
 }
 
@@ -154,9 +172,9 @@ export type TSizeTranslatorHolder = {
 
 // 布局Node的原型接口
 export abstract class LayoutNode<T extends IVNode> {
-  tag: TAG_TYPE = TAGS.NONE;
-  private tabWidth: number = 2;
-  sizeTranslatorHolder?: TSizeTranslatorHolder;
+  tag: TAG_TYPE = TAGS.NONE
+  private tabWidth: number = 2
+  sizeTranslatorHolder?: TSizeTranslatorHolder
 
   constructor (tag?: TAG_TYPE) {
     if (tag) {
@@ -176,13 +194,13 @@ export abstract class LayoutNode<T extends IVNode> {
     this.sizeTranslatorHolder = translatorHolder
   }
 
-  abstract render(node: T): string;
+  abstract render(node: T): string
 }
 
 
 // 主题Node的原型接口
 export abstract class ThemeNode<T extends IVNode> {
-  tag: TAG_TYPE = TAGS.NONE;
+  tag: TAG_TYPE = TAGS.NONE
 
   constructor (tag?: TAG_TYPE) {
     if (tag) {
@@ -190,7 +208,7 @@ export abstract class ThemeNode<T extends IVNode> {
     }
   }
 
-  abstract inject(node: T): T;
+  abstract inject(node: T): T
 }
 
 

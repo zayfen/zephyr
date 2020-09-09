@@ -3,6 +3,11 @@ import { VNode } from '../core/prototype'
 import { LayoutNode } from '../core/prototype'
 import { ThemeNode } from '../core/prototype'
 import { ComponentAssets } from '../core/component-assets'
+import {
+  resolveStyle,
+  resolveClassList,
+  resolveAttributes
+} from '../utils/node-utils'
 
 
 const TAG = 'canvas'
@@ -22,10 +27,15 @@ class CanvasHTML extends LayoutNode<Canvas> {
   }
 
   render(node: Canvas): string {
+    let id = node.getId()
+    let style = resolveStyle(node)
+    let cls = resolveClassList(node)
+    let attrs = resolveAttributes(node)
+
     const children = node.children || []
     const childrenRendered = children.map(child => child.render()).join('\n')
 
-    return `<canvas>${childrenRendered} </canvas>`
+    return `<canvas id="${id}" style="${style}" class="${cls}" ${attrs}>${childrenRendered}</canvas>`
   }
 }
 
@@ -37,9 +47,14 @@ class CanvasWXML extends LayoutNode<Canvas> {
   }
 
   render(node: Canvas): string {
+    let id = node.getId()
+    let style = resolveStyle(node)
+    let cls = resolveClassList(node)
+    let attrs = resolveAttributes(node)
+
     const children = node.children || []
     const childrenRendered = children.map(child => child.render()).join('\n')
-    return `<canvas>${childrenRendered} </canvas>`
+    return `<canvas id="${id}" style="${style}" class="${cls}" ${attrs}>${childrenRendered}</canvas>`
   }
 
 }

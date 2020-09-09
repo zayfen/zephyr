@@ -5,7 +5,7 @@ import { ThemeManager } from './core/theme-manager'
 import { ComponentAssets } from './core/component-assets'
 import { Parser } from './compiler/parser'
 import { AST } from './compiler/ast'
-import { isReservedTag } from './utils/node-utils'
+import { splitStyleStr2Styles } from './utils/node-utils'
 import { createElementFromHTML } from './utils/dom-utils'
 import componentInstallers from './components/index'
 
@@ -82,6 +82,7 @@ export class Zephyr {
       if (currentNode?.children && currentNode.children.length > 0) {
         currentNode.children.forEach(node => queue.push(node));
       }
+      currentNode.app = this
       themeManager.injectThemeNode(currentNode);
       layoutManager.injectLayoutNode(currentNode);
     }
@@ -89,72 +90,11 @@ export class Zephyr {
 
 
   /**
-   * 渲染virtual node tree
-   */
-  public render<T extends VNode>(root?: T) {
-    if (root) {
-      this.root = root;
-    }
-
-    if (this.layout === '' || this.theme === '') {
-      throw new Error('Please Set layout or theme');
-    }
-
-    if (this.root === null) {
-      return '';
-    }
-
-    // step 1: inject theme and layout to Node
-    this.injectLayoutAndTheme()
-
-    // step2: render root
-    // let dom = this.root.layoutNode.render(this.root);
-    let dom = this.root.render()
-    return dom;
-  }
-
-
-  // render 规范化之后的AST, 也就是增加了$vnode字段的AST
-  public renderAST (ast: AST): string {
-    let vnodeRoot = ast.$vnode
-    this.root = vnodeRoot
-
-    let queue = []
-    queue.push(ast)
-    while (queue.length > 0) {
-      let front = queue.shift()
-      if (front.$parent) {
-        front.$parent.children.push(front.$vnode)
-      }
-
-      if (front.children && front.children.length > 0) {
-        front.children.forEach(child => queue.push(child))
-      }
-    }
-
-    return this.render(vnodeRoot)
-  }
-
-
-
-  private createVNodeInstance (ast: AST): VNode {
-    // if (isReservedTag(ast.tag) || ast.isText) {
-    //   return null
-    // }
-
-    const VNodeCtor = this.assets.findVNodeByTag(ast.tag)
-    console.log("createVNodeInstance: ", ast.tag)
-    console.log("createVNodeInstance: ", VNodeCtor, VNodeCtor == null)
-    return new VNodeCtor
-  }
-
-
-  /**
    * 渲染模板
    * @param { string } template 模板字符串
-   * @returns { string } 返回转换之后的view层字符串
+   * @returns { VNode } 返回转换之后的VNode Tree
    */
-  public renderTemplate (template: string): string {
+  public renderTemplate (template: string): VNode {
     const parser = new Parser(template)
     const ast = parser.parse()
 
@@ -181,6 +121,97 @@ export class Zephyr {
 
     return this.renderAST(ast)
   }
+
+
+  /**
+   * 创建ast的tag创建对应的VNode实例
+   * @param {{ AST }} ast 解析的模板字符串中的AST中一个节点
+   * @return {{ VNode }} 返回虚拟节点
+   */
+  private createVNodeInstance (ast: AST): VNode {
+    const VNodeCtor = this.assets.findVNodeByTag(ast.tag)
+    console.log("createVNodeInstance: ", ast.tag)
+    console.log("createVNodeInstance: ", VNodeCtor, VNodeCtor == null)
+    let instance = new VNodeCtor
+
+    // set attributes
+    ast.attrs?.forEach(attr => {
+      let key = attr.key
+      let value = attr.value
+
+      // TODO: 这里解析归类所有的attributes, 有style class event  filter...
+      switch (key) {
+        case 'style':
+          instance.addStyles(splitStyleStr2Styles(value as string))
+          break
+        case 'class':
+          (value as string).split(' ').forEach(cls => instance.addClass(cls))
+          break
+        default:
+          instance.addAttr(key, value)
+      }
+    })
+
+    // 处理text节点
+    if (ast.isText) {
+      instance.isText = true
+      instance.text = ast.text
+    }
+    return instance
+  }
+
+
+  // render 规范化之后的AST, 也就是增加了$vnode字段的AST
+  public renderAST (ast: AST): VNode {
+    let vnodeRoot = ast.$vnode
+
+    // is text
+    this.root = vnodeRoot
+
+    let queue = []
+    queue.push(ast)
+    while (queue.length > 0) {
+      let front = queue.shift()
+      if (front.$parent) {
+        front.$parent.children.push(front.$vnode)
+      }
+
+      if (front.children && front.children.length > 0) {
+        front.children.forEach(child => queue.push(child))
+      }
+    }
+
+    return this.root
+  }
+
+
+
+  /**
+   * 渲染virtual node tree
+   */
+  public render<T extends VNode>(root?: T): string {
+    if (root) {
+      this.root = root
+    }
+
+    if (this.layout === '' || this.theme === '') {
+      throw new Error('Please Set layout or theme')
+    }
+
+    if (this.root === null) {
+      return ''
+    }
+
+    // step 1: inject theme and layout to Node
+    this.injectLayoutAndTheme()
+
+    // step2: render root
+    // let dom = this.root.layoutNode.render(this.root);
+    let dom: string = this.root.render()
+    return dom
+  }
+
+
 
 
   /**

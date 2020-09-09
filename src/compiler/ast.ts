@@ -8,7 +8,7 @@ interface Node {
   children: Array<Node>,          // children nodes
   isText?: boolean,
   isComment?: boolean,
-  $vnode?: VNode,
+  $vnode?: VNode
   $parent?: VNode
 }
 

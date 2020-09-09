@@ -3,6 +3,11 @@ import { VNode } from '../core/prototype'
 import { LayoutNode } from '../core/prototype'
 import { ThemeNode } from '../core/prototype'
 import { ComponentAssets } from '../core/component-assets'
+import {
+  resolveStyle,
+  resolveClassList,
+  resolveAttributes
+} from '../utils/node-utils'
 
 
 const TAG = 'iframe'
@@ -22,10 +27,15 @@ class IframeHTML extends LayoutNode<Iframe> {
   }
 
   render(node: Iframe): string {
+    let id = node.getId()
+    let style = resolveStyle(node)
+    let cls = resolveClassList(node)
+    let attrs = resolveAttributes(node)
+
     const children = node.children || []
     const childrenRendered = children.map(child => child.render()).join('\n')
 
-    return `<iframe>${childrenRendered} </iframe>`
+    return `<iframe id="${id}" style="${style}" class="${cls}" ${attrs}>${childrenRendered}</iframe>`
   }
 }
 
@@ -37,9 +47,14 @@ class IframeWXML extends LayoutNode<Iframe> {
   }
 
   render(node: Iframe): string {
+    let id = node.getId()
+    let style = resolveStyle(node)
+    let cls = resolveClassList(node)
+    let attrs = resolveAttributes(node)
+
     const children = node.children || []
     const childrenRendered = children.map(child => child.render()).join('\n')
-    return `<web-view>${childrenRendered} </web-view>`
+    return `<web-view id="${id}" style="${style}" class="${cls}" ${attrs}>${childrenRendered}</web-view>`
   }
 
 }

@@ -3,6 +3,11 @@ import { VNode } from '../core/prototype'
 import { LayoutNode } from '../core/prototype'
 import { ThemeNode } from '../core/prototype'
 import { ComponentAssets } from '../core/component-assets'
+import {
+  resolveStyle,
+  resolveClassList,
+  resolveAttributes
+} from '../utils/node-utils'
 
 
 const TAG = 'h5'
@@ -22,10 +27,15 @@ class H5HTML extends LayoutNode<H5> {
   }
 
   render(node: H5): string {
+    let id = node.getId()
+    let style = resolveStyle(node)
+    let cls = resolveClassList(node)
+    let attrs = resolveAttributes(node)
+
     const children = node.children || []
     const childrenRendered = children.map(child => child.render()).join('\n')
 
-    return `<h5>${childrenRendered} </h5>`
+    return `<h5 id="${id}" style="${style}" class="${cls}" ${attrs}>${childrenRendered}</h5>`
   }
 }
 
@@ -37,9 +47,14 @@ class H5WXML extends LayoutNode<H5> {
   }
 
   render(node: H5): string {
+    let id = node.getId()
+    let style = resolveStyle(node)
+    let cls = resolveClassList(node)
+    let attrs = resolveAttributes(node)
+
     const children = node.children || []
     const childrenRendered = children.map(child => child.render()).join('\n')
-    return `<view>${childrenRendered} </view>`
+    return `<view id="${id}" style="${style}" class="${cls}" ${attrs}>${childrenRendered}</view>`
   }
 
 }

@@ -67,6 +67,18 @@ export function setStyle (node: IVNode, styleKey: string, styleValue: string|num
 }
 
 
+export function splitStyleStr2Styles (style: string): { [key: string]: string } {
+  let styles: {[key: string]: string } = {}
+
+  style.split(';').forEach((kv: string) => {
+    let [key, value] = kv.split(':')
+    if (!!key?.trim() && !!value?.trim()) {
+      styles[key.trim()] = value?.trim()
+    }
+  })
+  return styles
+}
+
 
 export function makeMap (str: string): ( _: string) => boolean {
   const map = Object.create(null)
