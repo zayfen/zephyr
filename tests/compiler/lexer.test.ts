@@ -11,7 +11,6 @@ describe('lexer', function () {
     expect('TAG-BEGIN-OPEN').equal(lexer.nextToken().kind)
     expect('TAG-BEGIN-CLOSE').equal(lexer.nextToken().kind)
     expect('TAG-END').equal(lexer.nextToken().kind)
-
     expect(null).equal(lexer.nextToken())
   })
 

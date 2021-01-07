@@ -56,7 +56,6 @@ class H1WXML extends LayoutNode<H1> {
     const childrenRendered = children.map(child => child.render()).join('\n')
     return `<view id="${id}" style="${style}" class="${cls}" ${attrs}>${childrenRendered}</view>`
   }
-
 }
 
 class H1Theme extends ThemeNode<H1> {
@@ -79,4 +78,3 @@ export function install (assets: ComponentAssets): void {
   assets.defineThemeNode('zephyr', new H1Theme)
 }
 
-  

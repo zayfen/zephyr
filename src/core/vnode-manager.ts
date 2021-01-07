@@ -24,7 +24,8 @@ export class VNodeManager {
   public registerVNode (tag: TAG_TYPE, vnode: Clazz<VNode>) {
     // avoid push duplicated vnode
     if (this.vnodes[tag]) {
-      throw new Error("duplicated vnode: " + tag)
+      console.warn("registering a duplicated vnode: <" + tag + ">")
+      // throw new Error("duplicated vnode: " + tag)
     }
 
     this.vnodes[tag] = vnode

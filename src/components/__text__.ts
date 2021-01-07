@@ -8,8 +8,11 @@ import { ComponentAssets } from '../core/component-assets'
 const TAG = '__text__'
 
 class __text__ extends VNode {
-  constructor () {
+  text: string = ''
+
+  constructor (text: string) {
     super(TAG)
+    this.text = text
   }
 }
 
@@ -56,4 +59,3 @@ export function install (assets: ComponentAssets): void {
   assets.defineThemeNode('zephyr', new __text__Theme)
 }
 
-  
