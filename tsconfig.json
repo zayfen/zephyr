@@ -3,6 +3,7 @@
     "baseUrl": ".",
     "target": "ES5",
     "module": "commonjs",
+    "lib": ["es6", "dom"],
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
@@ -13,11 +14,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "**/*.spec.ts"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts", "tests/**/*"]
 }

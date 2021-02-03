@@ -4,7 +4,7 @@
     "registry": "http://npm.shuame.org/"
   },
   "author": "zayfen",
-  "version": "0.1.5",
+  "version": "1.0.1",
   "description": "将自定义的AST转换成 HTML 和 WXML",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -24,14 +24,14 @@
   },
   "homepage": "https://github.com/zayfen/zephyr#readme",
   "devDependencies": {
-    "@types/chai": "^4.2.12",
-    "@types/mocha": "^8.0.3",
+    "@types/chai": "^4.2.14",
+    "@types/mocha": "^8.2.0",
     "braces": "^2.3.1",
     "chai": "^4.2.0",
     "cpx": "^1.5.0",
-    "mocha": "^8.1.3",
+    "mocha": "^8.2.1",
     "nyc": "^15.1.0",
-    "ts-node": "^9.0.0",
+    "ts-node": "^9.1.1",
     "typescript": "^3.9.7",
     "wxss-cli": "^1.0.4"
   }

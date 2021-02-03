@@ -44,7 +44,7 @@ export class ThemeManager {
     for (let i = 0; i < this.themeNodeList.length; i++) {
       if (this.themeNodeList[i].tag === node.tag) {
         node.themeNode = this.themeNodeList[i]
-        node.classList.splice(0, node.classList.length)
+        // node.classList.splice(0, node.classList.length)
         node.themeNode.inject(node)
         node.theme = this
         return

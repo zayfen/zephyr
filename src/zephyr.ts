@@ -8,11 +8,11 @@ import { splitStyleStr2Styles } from './utils/node-utils';
 import { createElementFromHTML } from './utils/dom-utils';
 import componentInstallers from './components/index';
 
-class MutationObserver {
-  constructor(callback: any) {}
-
-  observe(target: any, config: any) {}
-}
+// NOTE: just for running on node env
+// class MutationObserver {
+//   constructor(callback: any) {}
+//   observe(target: any, config: any) {}
+// }
 
 export class Zephyr {
   private root: VNode = null;
@@ -132,27 +132,31 @@ export class Zephyr {
    */
   private createVNodeInstance(ast: AST): VNode {
     const VNodeCtor = this.assets.findVNodeByTag(ast.tag);
-    console.log('createVNodeInstance TAG: ', ast.tag);
-    console.log('createVNodeInstance Ctor: ', VNodeCtor, VNodeCtor == null);
+    // console.log('createVNodeInstance TAG: ', ast.tag);
+    // console.log('createVNodeInstance Ctor: ', VNodeCtor, VNodeCtor == null);
     let instance = new VNodeCtor();
 
     // set attributes
-    ast.attrs?.forEach((attr) => {
-      let key = attr.key;
-      let value = attr.value;
+    if (ast && ast.attrs) {
+      ast.attrs.forEach((attr: { key: string; value: string }) => {
+        let key = attr.key;
+        let value = attr.value;
 
-      // TODO: 这里解析归类所有的attributes, 有style class event  filter...
-      switch (key) {
-        case 'style':
-          instance.addStyles(splitStyleStr2Styles(value as string));
-          break;
-        case 'class':
-          (value as string).split(' ').forEach((cls) => instance.addClass(cls));
-          break;
-        default:
-          instance.addAttr(key, value);
-      }
-    });
+        // TODO: 这里解析归类所有的attributes, 有style class event  filter...
+        switch (key) {
+          case 'style':
+            instance.addStyles(splitStyleStr2Styles(value as string));
+            break;
+          case 'class':
+            (value as string)
+              .split(' ')
+              .forEach((cls) => instance.addClass(cls));
+            break;
+          default:
+            instance.addAttr(key, value);
+        }
+      });
+    }
 
     // 处理text节点
     if (ast.isText) {
@@ -169,7 +173,7 @@ export class Zephyr {
     // is text
     this.root = vnodeRoot;
 
-    let queue = [];
+    let queue: AST[] = [];
     queue.push(ast);
     while (queue.length > 0) {
       let front = queue.shift();

@@ -23,6 +23,7 @@ class MyComponentLayout extends LayoutNode<MyComponent> {
   }
 
   render(node: MyComponent): string {
+    console.info("mycomponent.render: ", node)
     let id = node.getId()
     let style = resolveStyle(node)
     let cls = resolveClassList(node)
@@ -60,20 +61,20 @@ describe('render component', function () {
     zephyr.useLayout('html')
     zephyr.useTheme('zephyr')
 
-    let viewTree = new MyComponent()
-    // 查找内部的组件
-    const liComponentClass = VNodeManager.getInstance().findVNodeByTag('li')
-    const textComponentClass = VNodeManager.getInstance().findVNodeByTag('__text__')
+    // let viewTree = new MyComponent()
+    // // 查找内部的组件
+    // const liComponentClass = VNodeManager.getInstance().findVNodeByTag('li')
+    // const textComponentClass = VNodeManager.getInstance().findVNodeByTag('__text__')
 
-    viewTree.append(new liComponentClass().append(new textComponentClass("item1")))
-    viewTree.append(new liComponentClass().append(new textComponentClass("item2")))
+    // viewTree.append(new liComponentClass().append(new textComponentClass("item1")))
+    // viewTree.append(new liComponentClass().append(new textComponentClass("item2")))
 
-    let rendered = zephyr.render(viewTree)
-    console.log('rendered: ', rendered)
+    // let rendered = zephyr.render(viewTree)
+    // console.log('rendered: ', rendered)
 
     const template = "<div><my-component class=\"test1 test2\"><li>Item1</li><li>Item2</li></my-component></div>"
     let ast = zephyr.renderTemplate(template)
-    console.log("****: ", ast.children)
-    console.log("***: ", zephyr.render(ast))
+    console.log("**** ast.children : ", ast.children)
+    console.log("*** ast: ", zephyr.render(ast))
   })
 })
