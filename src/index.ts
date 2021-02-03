@@ -1,27 +1,12 @@
-import { Zephyr } from "./zephyr";
-import {
-  IVNode,
-  VNode,
-  LayoutNode,
-  ThemeNode,
-  SizeTranslator
-} from './core/prototype';
+export * from './zephyr';
+export * from './core/prototype';
+export * from './core/component-assets';
+export * from './core/layout-manager';
+export * from './core/theme-manager';
+export * from './core/vnode-manager';
 
 import * as NodeUtils from './utils/node-utils';
 import * as StringUtils from './utils/string-utils';
 
-// 原型接口
-export {
-  Zephyr,
-  IVNode,
-  VNode,
-  LayoutNode,
-  ThemeNode,
-  SizeTranslator
-}
-
 // 导出Utils
-export {
-  NodeUtils,
-  StringUtils
-}
+export { NodeUtils, StringUtils };

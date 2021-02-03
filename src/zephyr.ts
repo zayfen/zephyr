@@ -43,8 +43,14 @@ export class Zephyr {
     });
   };
 
+  // 设置ComponentAssets
   public setComponentAssets(assets: ComponentAssets) {
     this.assets = assets;
+  }
+
+  // 获取ComponentAssets
+  public getComponentAssets(): ComponentAssets {
+    return this.assets;
   }
 
   /**

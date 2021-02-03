@@ -84,13 +84,13 @@ export abstract class VNode implements IVNode {
   }
 
   onMounted(): void {
-    throw new Error(
+    console.warn(
       'onMounted Method not implemented.' + `(${this.tag} :: ${this.id})`
     );
   }
 
   onUpdate(): void {
-    throw new Error(
+    console.warn(
       'onUpdate Method not implemented.' + `(${this.tag} :: ${this.id})`
     );
   }
