@@ -10,7 +10,7 @@ export type TAG_TYPE = TAGS | string;
 // interface of VNode
 export interface IVNode {
   tag: TAG_TYPE;
-  app: Zephyr;
+  zephyr: Zephyr;
   id: string;
   level: number;
   style: { [key: string]: number | string };
@@ -32,10 +32,20 @@ export interface IVNode {
   addAttr(key: string, value: any): this;
   addStyle(key: string, value: string | number): this;
   addStyles(styleObject: { [key: string]: string | number }): this;
+  removeStyle(key: string): this;
+  clearStyles (): this;
   addCustomClass(cls: string): this;
+  removeCustomClass(cls: string): this;
+  clearCustomClass(): this;
   addClass(cls: string): this;
+  removeClass(cls: string): this;
+  clearClass(): this;
   attr(key: string, elseDefault?: any): any;
+  removeAttr(key: string): this;
+  clearAttr(): this;
   addWhiteListAttr(key: string): this;
+  removeWhiteListAttr(key: string): this;
+  clearWhiteListAttr(): this;
   render(layout?: LayoutManager, theme?: ThemeManager): string;
   update(): void;
   onMounted(): void;
@@ -45,7 +55,7 @@ export interface IVNode {
 export abstract class VNode implements IVNode {
   attrWhiteList?: string[];
   tag: TAG_TYPE = TAGS.NONE;
-  app: Zephyr = null;
+  zephyr: Zephyr = null;
   id: string = '';
   level: number = 0;
   style: { [key: string]: string | number } = {};
@@ -114,11 +124,37 @@ export abstract class VNode implements IVNode {
     return this;
   }
 
-  addClass(cls: string): this {
+  removeCustomClass (cls: string): this {
+    const foundIndex = this.customClassList.indexOf(cls.trim())
+    if (foundIndex > -1) {
+      this.customClassList.splice(foundIndex, 1)
+    }
+    return this
+  }
+
+  clearCustomClass (): this {
+    this.customClassList.length = 0
+    return this
+  }
+
+  addClass (cls: string): this {
     if (this.classList.indexOf(cls.trim()) === -1) {
       this.classList.push(cls);
     }
     return this;
+  }
+
+  removeClass (cls: string): this {
+    const foundIndex = this.classList.indexOf(cls.trim())
+    if (foundIndex > -1) {
+      this.classList.splice(foundIndex, 1)
+    }
+    return this
+  }
+
+  clearClass (): this {
+    this.classList.length = 0
+    return this
   }
 
   addAttr(key: string, value: any): this {
@@ -128,6 +164,16 @@ export abstract class VNode implements IVNode {
 
   attr(key: string, elseDefault?: any): any {
     return this.attrList[key] === void 0 ? elseDefault : this.attrList[key];
+  }
+
+  removeAttr (key: string): this {
+    delete this.attrList[key]
+    return this
+  }
+
+  clearAttr (): this {
+    this.attrList = Object.create(null)
+    return this
   }
 
   addStyle(key: string, value: string | number): this {
@@ -143,10 +189,34 @@ export abstract class VNode implements IVNode {
     return this;
   }
 
+  removeStyle (key: string): this {
+    delete this.style[key]
+    return this
+  }
+
+  clearStyles (): this {
+    this.style = Object.create(null)
+    return this
+  }
+
   addWhiteListAttr(key: string): this {
     this.attrWhiteList.push(key);
     return this;
   }
+
+  removeWhiteListAttr (key: string): this {
+    const foundIndex = this.attrWhiteList.indexOf(key)
+    if (foundIndex > -1) {
+      this.attrWhiteList.splice(foundIndex, 1)
+    }
+    return this
+  }
+
+  clearWhiteListAttr (): this {
+    this.attrWhiteList.length = 0
+    return this
+  }
+
 
   render(layout?: LayoutManager, theme?: ThemeManager): string {
     layout?.injectLayoutNode(this);

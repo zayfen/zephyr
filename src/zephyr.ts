@@ -92,7 +92,7 @@ export class Zephyr {
       if (currentNode?.children && currentNode.children.length > 0) {
         currentNode.children.forEach((node) => queue.push(node));
       }
-      currentNode.app = this;
+      currentNode.zephyr = this;
       themeManager.injectThemeNode(currentNode);
       layoutManager.injectLayoutNode(currentNode);
     }
